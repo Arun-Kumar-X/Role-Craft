@@ -163,12 +163,13 @@ body {
     align-items: center;
 }
 
-.view-controls {
+.date-range-selector {
     display: flex;
+    align-items: center;
     gap: 8px;
 }
 
-.view-select, .period-select {
+.period-select {
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 6px;
@@ -203,17 +204,6 @@ body {
     background-color: var(--dark);
 }
 
-.btn-secondary {
-    background-color: transparent;
-    border: 2px solid var(--accent);
-    color: var(--accent);
-}
-
-.btn-secondary:hover {
-    background-color: var(--accent);
-    color: white;
-}
-
 .btn-outline {
     background-color: transparent;
     border: 2px solid var(--accent);
@@ -225,124 +215,109 @@ body {
     color: white;
 }
 
-/* Statistics */
-.stats-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 24px;
+.btn-small {
+    padding: 8px 16px;
+    font-size: 12px;
 }
 
-.stat-card {
+/* Metrics Grid */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
     background: white;
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 4px 12px var(--shadow);
-    display: flex;
-    align-items: center;
-    gap: 16px;
     transition: all 0.3s ease;
 }
 
-.stat-card:hover {
+.metric-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px var(--shadow);
 }
 
-.stat-icon {
-    width: 60px;
-    height: 60px;
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.metric-header h3 {
+    font-size: 14px;
+    color: #777;
+    font-weight: 500;
+}
+
+.metric-trend {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 8px;
     border-radius: 12px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    color: white;
+    gap: 4px;
 }
 
-.stat-icon.performance {
-    background-color: var(--accent);
+.metric-trend.up {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: var(--success);
 }
 
-.stat-icon.attendance {
-    background-color: var(--success);
+.metric-trend.down {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: var(--danger);
 }
 
-.stat-icon.productivity {
-    background-color: var(--warning);
-}
-
-.stat-icon.engagement {
-    background-color: var(--info);
-}
-
-.stat-value {
+.metric-value {
     font-size: 32px;
     font-weight: 700;
     color: var(--dark);
-    margin-bottom: 4px;
+    margin-bottom: 16px;
 }
 
-.stat-label {
-    font-size: 14px;
-    color: #777;
+.metric-chart {
+    height: 40px;
 }
 
-/* Heatmap Controls */
-.heatmap-controls {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 12px var(--shadow);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    align-items: end;
-}
-
-.control-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.control-group label {
-    font-weight: 500;
-    color: var(--dark);
-    font-size: 14px;
-}
-
-.filter-select {
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
+.sparkline {
     width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        var(--accent) 0%, 
+        var(--primary) 25%, 
+        var(--accent) 50%, 
+        var(--primary) 75%, 
+        var(--accent) 100%);
+    border-radius: 4px;
+    opacity: 0.7;
 }
 
-.control-actions {
-    display: flex;
-    gap: 8px;
-    align-self: end;
+/* Charts Grid */
+.charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
-.filter-select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(120, 134, 199, 0.2);
-}
-
-/* Heatmap Container */
-.heatmap-container {
+.chart-card {
     background: white;
     border-radius: 12px;
     box-shadow: 0 4px 12px var(--shadow);
-    margin-bottom: 30px;
     overflow: hidden;
 }
 
-.heatmap-header {
+.chart-card.large {
+    grid-column: span 1;
+}
+
+.chart-header {
     padding: 20px 24px;
     border-bottom: 1px solid #f0f0f0;
     display: flex;
@@ -350,211 +325,184 @@ body {
     align-items: center;
 }
 
-.heatmap-header h3 {
-    font-size: 18px;
+.chart-header h3 {
+    font-size: 16px;
     color: var(--dark);
+    font-weight: 600;
 }
 
-.heatmap-legend {
+.chart-actions {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    gap: 8px;
 }
 
-.legend-label {
-    font-size: 12px;
-    color: #777;
-    font-weight: 500;
-}
-
-.legend-gradient {
-    display: flex;
-    height: 20px;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.gradient-stop {
-    flex: 1;
-    height: 100%;
-}
-
-.heatmap-grid {
-    padding: 24px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-    max-height: 600px;
-    overflow-y: auto;
-}
-
-.heatmap-cell {
-    background: var(--secondary);
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-    transition: all 0.3s ease;
+.btn-icon {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--secondary);
+    color: var(--accent);
     cursor: pointer;
-    border: 2px solid transparent;
-}
-
-.heatmap-cell:hover {
-    transform: scale(1.05);
-    border-color: var(--accent);
-    box-shadow: 0 4px 12px var(--shadow);
-}
-
-.employee-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    margin: 0 auto 8px;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.btn-icon:hover {
+    background-color: var(--accent);
     color: white;
-    font-weight: 600;
-    font-size: 16px;
+    transform: scale(1.1);
 }
 
-.employee-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--dark);
-    margin-bottom: 4px;
+.chart-container {
+    padding: 24px;
+    height: 300px;
 }
 
-.employee-department {
-    font-size: 10px;
-    color: #777;
-    margin-bottom: 8px;
-    text-transform: uppercase;
+.chart-placeholder {
+    height: 100%;
+    background: var(--secondary);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    text-align: center;
 }
 
-.performance-score {
+.chart-placeholder i {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.chart-placeholder p {
     font-size: 14px;
-    font-weight: 700;
+    color: var(--dark);
 }
 
-/* Department Breakdown */
-.department-breakdown {
+.department-chart {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+}
+
+.chart-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legend-color.marketing {
+    background-color: #e74c3c;
+}
+
+.legend-color.it {
+    background-color: #3498db;
+}
+
+.legend-color.hr {
+    background-color: #9b59b6;
+}
+
+.legend-color.manufacturing {
+    background-color: #f39c12;
+}
+
+.legend-color.finance {
+    background-color: #1abc9c;
+}
+
+/* Reports Section */
+.reports-section {
     margin-bottom: 30px;
 }
 
-.department-breakdown h3 {
+.reports-section h3 {
     font-size: 20px;
     color: var(--dark);
     margin-bottom: 20px;
 }
 
-.department-cards {
+.reports-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-.department-card {
+.report-card {
     background: white;
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 4px 12px var(--shadow);
+    display: flex;
+    gap: 16px;
     transition: all 0.3s ease;
 }
 
-.department-card:hover {
+.report-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 6px 16px var(--shadow);
 }
 
-.department-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.department-icon {
+.report-icon {
     width: 60px;
     height: 60px;
+    background: var(--secondary);
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--accent);
     font-size: 24px;
-    color: white;
-}
-
-.department-icon.marketing {
-    background-color: #e74c3c;
-}
-
-.department-icon.it {
-    background-color: #3498db;
-}
-
-.department-icon.hr {
-    background-color: #9b59b6;
-}
-
-.department-icon.manufacturing {
-    background-color: #f39c12;
-}
-
-.department-icon.finance {
-    background-color: #1abc9c;
-}
-
-.department-info h4 {
-    font-size: 18px;
-    color: var(--dark);
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-
-.employee-count {
-    font-size: 14px;
-    color: #777;
-}
-
-.performance-metrics {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.metric {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.metric-label {
-    font-size: 12px;
-    color: #777;
-    width: 80px;
     flex-shrink: 0;
 }
 
-.metric-bar {
+.report-content {
     flex: 1;
-    height: 8px;
-    background-color: var(--secondary);
-    border-radius: 4px;
-    overflow: hidden;
 }
 
-.metric-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-}
-
-.metric-value {
-    font-size: 12px;
-    font-weight: 600;
+.report-content h4 {
+    font-size: 16px;
     color: var(--dark);
-    width: 35px;
-    text-align: right;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.report-content p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 12px;
+}
+
+.report-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12px;
+    color: #999;
+}
+
+.report-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-self: center;
 }
 
 /* Insights Section */
@@ -579,6 +527,7 @@ body {
     border-radius: 12px;
     padding: 24px;
     box-shadow: 0 4px 12px var(--shadow);
+    border-left: 4px solid var(--accent);
     transition: all 0.3s ease;
 }
 
@@ -591,7 +540,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .insight-header i {
@@ -612,81 +561,11 @@ body {
     font-weight: 600;
 }
 
-.insight-content {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.top-performer, .trend-item, .attention-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 0;
-}
-
-.rank {
-    width: 24px;
-    height: 24px;
-    background: var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.name {
-    flex: 1;
+.insight-content p {
     font-size: 14px;
-    color: var(--dark);
-    font-weight: 500;
+    color: #555;
+    line-height: 1.5;
 }
-
-.score {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--success);
-}
-
-.trend {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 4px 8px;
-    border-radius: 12px;
-}
-
-.trend.up {
-    background-color: rgba(46, 204, 113, 0.1);
-    color: var(--success);
-}
-
-.trend.down {
-    background-color: rgba(231, 76, 60, 0.1);
-    color: var(--danger);
-}
-
-.reason {
-    font-size: 12px;
-    color: #777;
-    font-style: italic;
-}
-
-/* Color scales for heatmap */
-.performance-low { background-color: #ff6b6b; color: white; }
-.performance-medium { background-color: #ffd166; color: #333; }
-.performance-high { background-color: #06d6a0; color: white; }
-.performance-very-high { background-color: #118ab2; color: white; }
-
-.attendance-low { background-color: #ff6b6b; color: white; }
-.attendance-medium { background-color: #ffd166; color: #333; }
-.attendance-high { background-color: #06d6a0; color: white; }
-
-.productivity-low { background-color: #ff6b6b; color: white; }
-.productivity-medium { background-color: #ffd166; color: #333; }
-.productivity-high { background-color: #06d6a0; color: white; }
 
 /* Responsive Design */
 @media (max-width: 992px) {
@@ -707,11 +586,11 @@ body {
         margin-right: 0;
         font-size: 20px;
     }
-    .heatmap-controls {
+    .charts-grid {
         grid-template-columns: 1fr;
     }
-    .heatmap-grid {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    .chart-card.large {
+        grid-column: span 1;
     }
 }
 
@@ -730,20 +609,23 @@ body {
         width: 100%;
         flex-wrap: wrap;
     }
-    .view-controls {
-        width: 100%;
-        justify-content: space-between;
+    .metrics-grid {
+        grid-template-columns: 1fr;
     }
-    .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .department-cards,
+    .reports-grid,
     .insights-grid {
         grid-template-columns: 1fr;
     }
-    .heatmap-header {
+    .report-card {
         flex-direction: column;
-        gap: 16px;
-        align-items: flex-start;
+        text-align: center;
+    }
+    .report-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+    .department-chart {
+        flex-direction: column;
+        gap: 20px;
     }
 }

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Profile - HR Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/hr/employee_profile.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-users fa-2x"></i>
+            <h2>HR Dashboard</h2>
+        </div>
+        <div class="sidebar-menu">
+            <a href="hr_dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="employee_list.html" class="menu-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Employee List</span>
+            </a>
+            <a href="add_employee.html" class="menu-item">
+                <i class="fas fa-user-plus"></i>
+                <span>Add Employee</span>
+            </a>
+            <a href="edit_employee.html" class="menu-item">
+                <i class="fas fa-user-edit"></i>
+                <span>Edit Employee</span>
+            </a>
+            <div class="menu-item active">
+                <i class="fas fa-id-card"></i>
+                <span>Employee Profile</span>
+            </div>
+            <a href="task_list_admin.html" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Task Management</span>
+            </a>
+            <a href="create_task.html" class="menu-item">
+                <i class="fas fa-plus-circle"></i>
+                <span>Create Task</span>
+            </a>
+            <a href="machine_logs.html" class="menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Machine Logs</span>
+            </a>
+            <a href="assessment_list.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Assessments</span>
+            </a>
+            <a href="reports.html" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Reports & Analytics</span>
+            </a>
+            <a href="notifications_admin.html" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Employee Profile</h1>
+            <div class="user-info">
+                <div class="user-avatar">HR</div>
+                <div>
+                    <div class="user-name">HR Manager</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="search-header">Find Employee Profile</div>
+                <div class="search-container">
+                    <div class="form-group">
+                        <label for="employeeSearch">Search by Name or ID</label>
+                        <input type="text" id="employeeSearch" class="search-input" placeholder="Enter employee name or ID...">
+                    </div>
+                    <button class="btn" id="searchBtn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Profile Card -->
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2>Sarah Johnson</h2>
+                        <p>Marketing Manager</p>
+                        <p>Marketing Department</p>
+                        <div class="profile-status">
+                            <span class="status-badge active">
+                                <i class="fas fa-circle"></i>
+                                Active Employee
+                            </span>
+                            <span class="tenure">3 years 6 months</span>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button class="btn btn-secondary" id="editProfileBtn">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                        <button class="btn" id="exportPdfBtn">
+                            <i class="fas fa-download"></i> Export PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Employee ID</div>
+                        <div class="detail-value">EMP-001</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value">sarah.johnson@company.com</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Phone</div>
+                        <div class="detail-value">(555) 123-4567</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Start Date</div>
+                        <div class="detail-value">March 15, 2020</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Address</div>
+                        <div class="detail-value">123 Main Street, Cityville, State 12345</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Salary</div>
+                        <div class="detail-value">$75,000 per year</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Reports To</div>
+                        <div class="detail-value">Jennifer Wilson (Director of Marketing)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tabs -->
+            <div class="profile-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-profile-tab="tasks">
+                        <i class="fas fa-tasks"></i> Tasks
+                    </button>
+                    <button class="tab-button" data-profile-tab="logs">
+                        <i class="fas fa-clipboard-list"></i> Machine Logs
+                    </button>
+                    <button class="tab-button" data-profile-tab="assessments">
+                        <i class="fas fa-chart-bar"></i> Assessments
+                    </button>
+                    <button class="tab-button" data-profile-tab="documents">
+                        <i class="fas fa-file-alt"></i> Documents
+                    </button>
+                    <button class="tab-button" data-profile-tab="attendance">
+                        <i class="fas fa-calendar-check"></i> Attendance
+                    </button>
+                </div>
+                
+                <!-- Tasks Tab -->
+                <div class="profile-tab-content active" id="profile-tasks">
+                    <div class="tab-content-header">
+                        <h3>Recent Tasks</h3>
+                        <button class="btn btn-small" id="assignTaskBtn">
+                            <i class="fas fa-plus"></i> Assign New Task
+                        </button>
+                    </div>
+                    <div class="task-list">
+                        <div class="task-item">
+                            <div class="task-info">
+                                <div class="task-title">Q3 Marketing Campaign</div>
+                                <div class="task-description">Develop and execute Q3 marketing campaign strategy</div>
+                                <div class="task-meta">
+                                    <span class="task-priority high">High Priority</span>
+                                    <span class="task-due">Due: Oct 15, 2023</span>
+                                </div>
+                            </div>
+                            <div class="task-status in-progress">In Progress</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <div class="task-title">Budget Planning</div>
+                                <div class="task-description">Prepare department budget for next fiscal year</div>
+                                <div class="task-meta">
+                                    <span class="task-priority medium">Medium Priority</span>
+                                    <span class="task-due">Due: Sep 30, 2023</span>
+                                </div>
+                            </div>
+                            <div class="task-status completed">Completed</div>
+                        </div>
+                        <div class="task-item">
+                            <div class="task-info">
+                                <div class="task-title">Team Training</div>
+                                <div class="task-description">Organize digital marketing training session</div>
+                                <div class="task-meta">
+                                    <span class="task-priority low">Low Priority</span>
+                                    <span class="task-due">Due: Nov 10, 2023</span>
+                                </div>
+                            </div>
+                            <div class="task-status pending">Pending</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Machine Logs Tab -->
+                <div class="profile-tab-content" id="profile-logs">
+                    <div class="tab-content-header">
+                        <h3>Recent Machine Logs</h3>
+                        <div class="date-filter">
+                            <select class="filter-select" id="logFilter">
+                                <option>Last 7 days</option>
+                                <option>Last 30 days</option>
+                                <option>Last 3 months</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="log-list">
+                        <div class="log-item">
+                            <div class="log-info">
+                                <div class="log-machine">Marketing Server - MS-204</div>
+                                <div class="log-description">Data analysis and campaign processing</div>
+                                <div class="log-date">Sep 12, 2023 | 2 hours 15 min</div>
+                            </div>
+                            <div class="log-actions">
+                                <button class="btn btn-small btn-secondary">View Details</button>
+                            </div>
+                        </div>
+                        <div class="log-item">
+                            <div class="log-info">
+                                <div class="log-machine">Design Workstation - DW-107</div>
+                                <div class="log-description">Creative asset development</div>
+                                <div class="log-date">Sep 10, 2023 | 4 hours 30 min</div>
+                            </div>
+                            <div class="log-actions">
+                                <button class="btn btn-small btn-secondary">View Details</button>
+                            </div>
+                        </div>
+                        <div class="log-item">
+                            <div class="log-info">
+                                <div class="log-machine">Marketing Server - MS-204</div>
+                                <div class="log-description">Report generation and analytics</div>
+                                <div class="log-date">Sep 8, 2023 | 1 hour 45 min</div>
+                            </div>
+                            <div class="log-actions">
+                                <button class="btn btn-small btn-secondary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Assessments Tab -->
+                <div class="profile-tab-content" id="profile-assessments">
+                    <div class="tab-content-header">
+                        <h3>Performance Assessments</h3>
+                        <button class="btn btn-small" id="scheduleAssessmentBtn">
+                            <i class="fas fa-plus"></i> Schedule Assessment
+                        </button>
+                    </div>
+                    <div class="assessment-list">
+                        <div class="assessment-item">
+                            <div class="assessment-header">
+                                <div class="assessment-period">Q2 2023 Performance Review</div>
+                                <div class="assessment-score">4.2/5.0</div>
+                            </div>
+                            <div class="assessment-details">
+                                <div class="assessment-date">Completed: Jun 30, 2023</div>
+                                <div class="assessment-reviewer">Reviewed by: Jennifer Wilson</div>
+                            </div>
+                            <div class="assessment-actions">
+                                <button class="btn btn-small btn-secondary">View Details</button>
+                            </div>
+                        </div>
+                        <div class="assessment-item">
+                            <div class="assessment-header">
+                                <div class="assessment-period">Q1 2023 Performance Review</div>
+                                <div class="assessment-score">4.5/5.0</div>
+                            </div>
+                            <div class="assessment-details">
+                                <div class="assessment-date">Completed: Mar 31, 2023</div>
+                                <div class="assessment-reviewer">Reviewed by: Jennifer Wilson</div>
+                            </div>
+                            <div class="assessment-actions">
+                                <button class="btn btn-small btn-secondary">View Details</button>
+                            </div>
+                        </div>
+                        <div class="assessment-item">
+                            <div class="assessment-header">
+                                <div class="assessment-period">Annual 2022 Review</div>
+                                <div class="assessment-score">4.3/5.0</div>
+                            </div>
+                            <div class="assessment-details">
+                                <div class="assessment-date">Completed: Dec 15, 2022</div>
+                                <div class="assessment-reviewer">Reviewed by: Robert Chen</div>
+                            </div>
+                            <div class="assessment-actions">
+                                <button class="btn btn-small btn-secondary">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents Tab -->
+                <div class="profile-tab-content" id="profile-documents">
+                    <div class="tab-content-header">
+                        <h3>Employee Documents</h3>
+                        <button class="btn btn-small" id="uploadDocumentBtn">
+                            <i class="fas fa-upload"></i> Upload Document
+                        </button>
+                    </div>
+                    <div class="document-list">
+                        <div class="document-item">
+                            <div class="document-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="document-info">
+                                <div class="document-name">Employment Contract.pdf</div>
+                                <div class="document-date">Uploaded: Mar 10, 2020</div>
+                            </div>
+                            <div class="document-actions">
+                                <button class="btn btn-small btn-secondary">Download</button>
+                            </div>
+                        </div>
+                        <div class="document-item">
+                            <div class="document-icon">
+                                <i class="fas fa-file-word"></i>
+                            </div>
+                            <div class="document-info">
+                                <div class="document-name">Performance Goals.docx</div>
+                                <div class="document-date">Uploaded: Jan 15, 2023</div>
+                            </div>
+                            <div class="document-actions">
+                                <button class="btn btn-small btn-secondary">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Tab -->
+                <div class="profile-tab-content" id="profile-attendance">
+                    <div class="tab-content-header">
+                        <h3>Attendance Record</h3>
+                        <div class="date-filter">
+                            <select class="filter-select" id="attendanceFilter">
+                                <option>September 2023</option>
+                                <option>August 2023</option>
+                                <option>July 2023</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="attendance-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">96%</div>
+                            <div class="stat-label">Attendance Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">2</div>
+                            <div class="stat-label">Absences</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Late Arrivals</div>
+                        </div>
+                    </div>
+                    <div class="attendance-calendar">
+                        <div class="calendar-placeholder">
+                            <i class="fas fa-calendar-alt"></i>
+                            <p>Attendance Calendar View</p>
+                            <small>Showing attendance data for September 2023</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/hr/employee_profile.js"></script>
+</body>
+</html>

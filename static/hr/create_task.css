@@ -164,12 +164,13 @@ body {
     font-size: 14px;
 }
 
-.employee-form {
+.task-form {
     background: white;
     border-radius: 12px;
     padding: 0;
     box-shadow: 0 4px 12px var(--shadow);
     overflow: hidden;
+    margin-bottom: 32px;
 }
 
 .form-section {
@@ -187,6 +188,17 @@ body {
     margin-bottom: 20px;
     padding-bottom: 12px;
     border-bottom: 2px solid var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-section h3::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background-color: var(--accent);
+    border-radius: 2px;
 }
 
 .form-row {
@@ -201,6 +213,7 @@ body {
 
 .form-group {
     margin-bottom: 20px;
+    position: relative;
 }
 
 .form-group label {
@@ -209,17 +222,6 @@ body {
     font-weight: 500;
     color: var(--dark);
     font-size: 14px;
-}
-
-.form-group label::after {
-    content: ' *';
-    color: var(--danger);
-    opacity: 0;
-}
-
-.form-group input:required + label::after,
-.form-group select:required + label::after {
-    opacity: 1;
 }
 
 input, select, textarea {
@@ -238,14 +240,125 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 0 3px rgba(120, 134, 199, 0.2);
 }
 
-input:invalid {
-    border-color: var(--danger);
+.char-count {
+    text-align: right;
+    font-size: 12px;
+    color: #777;
+    margin-top: 4px;
 }
 
+/* Assignee Tags */
+.assignee-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    min-height: 40px;
+}
+
+.assignee-tag {
+    background: var(--secondary);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--accent);
+}
+
+.assignee-tag .remove-tag {
+    background: none;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.assignee-tag .remove-tag:hover {
+    background-color: var(--danger);
+    color: white;
+}
+
+/* File Upload */
+.file-upload-area {
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-upload-area:hover {
+    border-color: var(--accent);
+    background-color: var(--secondary);
+}
+
+.file-upload-area i {
+    font-size: 48px;
+    color: var(--accent);
+    margin-bottom: 16px;
+}
+
+.file-upload-area p {
+    color: #777;
+    margin-bottom: 16px;
+}
+
+.file-list {
+    margin-top: 12px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: var(--secondary);
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-icon {
+    color: var(--accent);
+}
+
+.file-name {
+    font-weight: 500;
+}
+
+.file-size {
+    font-size: 12px;
+    color: #777;
+}
+
+.file-remove {
+    background: none;
+    border: none;
+    color: var(--danger);
+    cursor: pointer;
+    padding: 4px;
+}
+
+/* Checkbox Groups */
 .checkbox-group {
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-bottom: 12px;
 }
 
 .checkbox-group input[type="checkbox"] {
@@ -256,16 +369,10 @@ input:invalid {
 .checkbox-group label {
     margin-bottom: 0;
     font-weight: normal;
+    cursor: pointer;
 }
 
-.form-actions {
-    padding: 24px 32px;
-    background-color: var(--secondary);
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-}
-
+/* Buttons */
 .btn {
     padding: 12px 24px;
     border: none;
@@ -279,6 +386,11 @@ input:invalid {
     gap: 8px;
 }
 
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow);
+}
+
 .btn-primary {
     background-color: var(--primary);
     color: white;
@@ -286,8 +398,6 @@ input:invalid {
 
 .btn-primary:hover {
     background-color: var(--dark);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--shadow);
 }
 
 .btn-secondary {
@@ -299,8 +409,90 @@ input:invalid {
 .btn-secondary:hover {
     background-color: var(--accent);
     color: white;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+}
+
+.btn-outline:hover {
+    background-color: var(--accent);
+    color: white;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    font-size: 12px;
+}
+
+.form-actions {
+    padding: 24px 32px;
+    background-color: var(--secondary);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Templates Section */
+.templates-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.templates-section h3 {
+    font-size: 18px;
+    color: var(--dark);
+    margin-bottom: 20px;
+}
+
+.template-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.template-card {
+    background: var(--secondary);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.template-card:hover {
+    border-color: var(--accent);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px var(--shadow);
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.template-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    margin: 0 auto 16px;
+}
+
+.template-card h4 {
+    font-size: 16px;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.template-card p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 16px;
 }
 
 /* Responsive Design */
@@ -339,5 +531,8 @@ input:invalid {
     }
     .form-section {
         padding: 20px;
+    }
+    .template-cards {
+        grid-template-columns: 1fr;
     }
 }

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List - HR Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/hr/employee_list.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-users fa-2x"></i>
+            <h2>HR Dashboard</h2>
+        </div>
+        <div class="sidebar-menu">
+            <a href="hr_dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <div class="menu-item active">
+                <i class="fas fa-user-friends"></i>
+                <span>Employee List</span>
+            </div>
+            <a href="add_employee.html" class="menu-item">
+                <i class="fas fa-user-plus"></i>
+                <span>Add Employee</span>
+            </a>
+            <a href="edit_employee.html" class="menu-item">
+                <i class="fas fa-user-edit"></i>
+                <span>Edit Employee</span>
+            </a>
+            <a href="employee_profile.html" class="menu-item">
+                <i class="fas fa-id-card"></i>
+                <span>Employee Profile</span>
+            </a>
+            <a href="task_list_admin.html" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Task Management</span>
+            </a>
+            <a href="create_task.html" class="menu-item">
+                <i class="fas fa-plus-circle"></i>
+                <span>Create Task</span>
+            </a>
+            <a href="machine_logs.html" class="menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Machine Logs</span>
+            </a>
+            <a href="assessment_list.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Assessments</span>
+            </a>
+            <a href="reports.html" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Reports & Analytics</span>
+            </a>
+            <a href="notifications_admin.html" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Employee List</h1>
+            <div class="user-info">
+                <div class="user-avatar">HR</div>
+                <div>
+                    <div class="user-name">HR Manager</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="page-header">
+                <h2>All Employees</h2>
+                <button class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Add New Employee
+                </button>
+            </div>
+
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label>Department</label>
+                    <select class="filter-select">
+                        <option>All Departments</option>
+                        <option>Marketing</option>
+                        <option>IT</option>
+                        <option>HR</option>
+                        <option>Manufacturing</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select class="filter-select">
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>On Leave</option>
+                        <option>Inactive</option>
+                    </select>
+                </div>
+                <div class="search-group">
+                    <input type="text" class="search-input" placeholder="Search employees...">
+                    <button class="btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Employee</th>
+                            <th>Department</th>
+                            <th>Position</th>
+                            <th>Status</th>
+                            <th>Join Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EMP-001</td>
+                            <td>
+                                <div class="employee-cell">
+                                    <div class="employee-avatar">SJ</div>
+                                    <div class="employee-info">
+                                        <div class="employee-name">Sarah Johnson</div>
+                                        <div class="employee-email">sarah.j@company.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Marketing</td>
+                            <td>Marketing Manager</td>
+                            <td><span class="status-badge active">Active</span></td>
+                            <td>Mar 15, 2020</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" title="View Profile">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMP-002</td>
+                            <td>
+                                <div class="employee-cell">
+                                    <div class="employee-avatar">MC</div>
+                                    <div class="employee-info">
+                                        <div class="employee-name">Michael Chen</div>
+                                        <div class="employee-email">michael.c@company.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>IT</td>
+                            <td>Software Developer</td>
+                            <td><span class="status-badge active">Active</span></td>
+                            <td>Jun 10, 2021</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" title="View Profile">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMP-003</td>
+                            <td>
+                                <div class="employee-cell">
+                                    <div class="employee-avatar">ER</div>
+                                    <div class="employee-info">
+                                        <div class="employee-name">Emily Rodriguez</div>
+                                        <div class="employee-email">emily.r@company.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>HR</td>
+                            <td>HR Specialist</td>
+                            <td><span class="status-badge active">Active</span></td>
+                            <td>Jan 20, 2022</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" title="View Profile">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>EMP-004</td>
+                            <td>
+                                <div class="employee-cell">
+                                    <div class="employee-avatar">DW</div>
+                                    <div class="employee-info">
+                                        <div class="employee-name">David Wilson</div>
+                                        <div class="employee-email">david.w@company.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>Manufacturing</td>
+                            <td>Production Supervisor</td>
+                            <td><span class="status-badge on-leave">On Leave</span></td>
+                            <td>Aug 05, 2019</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-icon" title="View Profile">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-icon danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button class="btn btn-outline">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-numbers">
+                    <span class="page-active">1</span>
+                    <span>2</span>
+                    <span>3</span>
+                    <span>...</span>
+                    <span>10</span>
+                </div>
+                <button class="btn btn-outline">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/hr/employee_list.js"></script>
+</body>
+</html>

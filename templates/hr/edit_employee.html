@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Employee - HR Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/hr/edit_employee.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-users fa-2x"></i>
+            <h2>HR Dashboard</h2>
+        </div>
+        <div class="sidebar-menu">
+            <a href="hr_dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="employee_list.html" class="menu-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Employee List</span>
+            </a>
+            <a href="add_employee.html" class="menu-item">
+                <i class="fas fa-user-plus"></i>
+                <span>Add Employee</span>
+            </a>
+            <div class="menu-item active">
+                <i class="fas fa-user-edit"></i>
+                <span>Edit Employee</span>
+            </div>
+            <a href="employee_profile.html" class="menu-item">
+                <i class="fas fa-id-card"></i>
+                <span>Employee Profile</span>
+            </a>
+            <a href="task_list_admin.html" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Task Management</span>
+            </a>
+            <a href="create_task.html" class="menu-item">
+                <i class="fas fa-plus-circle"></i>
+                <span>Create Task</span>
+            </a>
+            <a href="machine_logs.html" class="menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Machine Logs</span>
+            </a>
+            <a href="assessment_list.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Assessments</span>
+            </a>
+            <a href="reports.html" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Reports & Analytics</span>
+            </a>
+            <a href="notifications_admin.html" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Edit Employee</h1>
+            <div class="user-info">
+                <div class="user-avatar">HR</div>
+                <div>
+                    <div class="user-name">HR Manager</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="search-header">Find Employee to Edit</div>
+                <div class="search-container">
+                    <div class="form-group">
+                        <label for="employeeSearch">Search by Name or ID</label>
+                        <input type="text" id="employeeSearch" class="search-input" placeholder="Enter employee name or ID...">
+                    </div>
+                    <button class="btn" id="searchBtn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+            <!-- Employee Information -->
+            <div class="employee-info-card">
+                <div class="employee-header">
+                    <div class="employee-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="employee-details">
+                        <h3>Sarah Johnson</h3>
+                        <p>EMP-001 | Marketing Department</p>
+                        <p>Marketing Manager</p>
+                        <span class="status-indicator status-active">
+                            <i class="fas fa-circle"></i>
+                            Active
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Alert -->
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                Employee record loaded successfully. You can now edit the details below.
+            </div>
+
+            <h2 class="tab-header">Edit Employee Details</h2>
+            
+            <!-- Edit Form -->
+            <form class="form-container">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editName">Full Name *</label>
+                        <input type="text" id="editName" value="Sarah Johnson" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">Email Address *</label>
+                        <input type="email" id="editEmail" value="sarah.johnson@company.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editDepartment">Department *</label>
+                        <select id="editDepartment" required>
+                            <option value="marketing" selected>Marketing</option>
+                            <option value="hr">Human Resources</option>
+                            <option value="it">Information Technology</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="finance">Finance</option>
+                            <option value="operations">Operations</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPosition">Position *</label>
+                        <input type="text" id="editPosition" value="Marketing Manager" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editPhone">Phone Number</label>
+                        <input type="tel" id="editPhone" value="(555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Employment Status</label>
+                        <select id="editStatus">
+                            <option value="active" selected>Active</option>
+                            <option value="on-leave">On Leave</option>
+                            <option value="terminated">Terminated</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="editAddress">Address</label>
+                    <textarea id="editAddress" rows="3">123 Main Street, Cityville, State 12345</textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editStartDate">Start Date *</label>
+                        <input type="date" id="editStartDate" value="2020-03-15" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editSalary">Salary ($)</label>
+                        <input type="number" id="editSalary" value="75000">
+                    </div>
+                </div>
+
+                <!-- Password Reset Section -->
+                <div class="password-section">
+                    <h3><i class="fas fa-key"></i> Password Reset</h3>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        This will immediately reset the employee's password and require them to set a new one upon next login.
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resetPassword">New Temporary Password</label>
+                            <input type="password" id="resetPassword" placeholder="Enter new temporary password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Temporary Password</label>
+                            <input type="password" id="confirmPassword" placeholder="Confirm new temporary password">
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger" id="resetPasswordBtn">
+                        <i class="fas fa-sync-alt"></i> Reset Password
+                    </button>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Update Employee
+                    </button>
+                    <button type="button" class="btn btn-danger" id="archiveBtn">
+                        <i class="fas fa-archive"></i> Archive Employee
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/hr/edit_employee.js"></script>
+</body>
+</html>

@@ -1,139 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Employee Performance Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="/static/hr/heatmap.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Heatmap - HR Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/hr/heatmap.css">
 </head>
 <body>
-  <div class="dashboard-container">
-    <header>
-      <h1>Employee Performance Dashboard</h1>
-      <p class="subtitle">Track and analyze employee performance metrics across departments</p>
-    </header>
-    
-    <div class="filters">
-      <button class="filter-btn active">All Departments</button>
-      <button class="filter-btn">Production</button>
-      <button class="filter-btn">Quality Control</button>
-      <button class="filter-btn">Maintenance</button>
-      <button class="filter-btn">Safety</button>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-users fa-2x"></i>
+            <h2>HR Dashboard</h2>
+        </div>
+        <div class="sidebar-menu">
+            <a href="hr_dashboard.html" class="menu-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="employee_list.html" class="menu-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Employee List</span>
+            </a>
+            <a href="add_employee.html" class="menu-item">
+                <i class="fas fa-user-plus"></i>
+                <span>Add Employee</span>
+            </a>
+            <a href="edit_employee.html" class="menu-item">
+                <i class="fas fa-user-edit"></i>
+                <span>Edit Employee</span>
+            </a>
+            <a href="employee_profile.html" class="menu-item">
+                <i class="fas fa-id-card"></i>
+                <span>Employee Profile</span>
+            </a>
+            <a href="task_list_admin.html" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Task Management</span>
+            </a>
+            <a href="create_task.html" class="menu-item">
+                <i class="fas fa-plus-circle"></i>
+                <span>Create Task</span>
+            </a>
+            <a href="machine_logs.html" class="menu-item">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Machine Logs</span>
+            </a>
+            <a href="assessment_list.html" class="menu-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Assessments</span>
+            </a>
+            <a href="reports.html" class="menu-item">
+                <i class="fas fa-chart-pie"></i>
+                <span>Reports & Analytics</span>
+            </a>
+            <a href="notifications_admin.html" class="menu-item">
+                <i class="fas fa-bell"></i>
+                <span>Notifications</span>
+            </a>
+            <div class="menu-item active">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>Employee Heatmap</span>
+            </div>
+        </div>
     </div>
-    
-    <div class="stats-container">
-      <div class="stat-card">
-        <div class="stat-icon">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="stat-value">87%</div>
-        <div class="stat-label">Overall Performance</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <i class="fas fa-chart-line"></i>
-        </div>
-        <div class="stat-value">+12%</div>
-        <div class="stat-label">Quarterly Growth</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <i class="fas fa-trophy"></i>
-        </div>
-        <div class="stat-value">24</div>
-        <div class="stat-label">Top Performers</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <i class="fas fa-bullseye"></i>
-        </div>
-        <div class="stat-value">94%</div>
-        <div class="stat-label">Target Achievement</div>
-      </div>
-    </div>
-    
-    <div class="charts-container">
-      <div class="chart-card">
-        <h2 class="chart-title"><i class="fas fa-chart-line"></i> Performance Trend Analysis</h2>
-        <canvas id="curveChart"></canvas>
-      </div>
-      
-      <div class="chart-card">
-        <h2 class="chart-title"><i class="fas fa-chart-pie"></i> Skill Distribution</h2>
-        <canvas id="skillChart"></canvas>
-      </div>
-    </div>
-    
-    <div class="heatmap-container">
-      <h2 class="chart-title"><i class="fas fa-th"></i> Performance Heatmap by Skill & Month</h2>
-      <div class="heatmap" id="heatmap"></div>
-      <div class="legend">
-        <div class="legend-item">
-          <div class="legend-color" style="background-color: #2D336B;"></div>
-          <span>High Performance (90-100)</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background-color: #7886C7;"></div>
-          <span>Medium Performance (80-89)</span>
-        </div>
-        <div class="legend-item">
-          <div class="legend-color" style="background-color: #A9B5DF;"></div>
-          <span>Low Performance (Below 80)</span>
-        </div>
-      </div>
-    </div>
-    
-    <div class="charts-container">
-      <div class="employee-list">
-        <h2 class="chart-title"><i class="fas fa-user-check"></i> Top Performers</h2>
-        <div class="employee-card">
-          <div class="employee-avatar">JD</div>
-          <div class="employee-info">
-            <div class="employee-name">John Davis</div>
-            <div class="employee-role">Machine Operator</div>
-            <span class="performance-badge badge-high">Top Performer</span>
-          </div>
-          <div class="employee-score">96%</div>
-        </div>
-        <div class="employee-card">
-          <div class="employee-avatar">SM</div>
-          <div class="employee-info">
-            <div class="employee-name">Sarah Miller</div>
-            <div class="employee-role">Quality Inspector</div>
-            <span class="performance-badge badge-high">Consistent</span>
-          </div>
-          <div class="employee-score">94%</div>
-        </div>
-        <div class="employee-card">
-          <div class="employee-avatar">RJ</div>
-          <div class="employee-info">
-            <div class="employee-name">Robert Johnson</div>
-            <div class="employee-role">Maintenance Tech</div>
-            <span class="performance-badge badge-medium">Improving</span>
-          </div>
-          <div class="employee-score">87%</div>
-        </div>
-        <div class="employee-card">
-          <div class="employee-avatar">EW</div>
-          <div class="employee-info">
-            <div class="employee-name">Emma Wilson</div>
-            <div class="employee-role">Safety Officer</div>
-            <span class="performance-badge badge-high">Excellent</span>
-          </div>
-          <div class="employee-score">98%</div>
-        </div>
-      </div>
-      
-      <div class="chart-card">
-        <h2 class="chart-title"><i class="fas fa-chart-bar"></i> Department Comparison</h2>
-        <canvas id="departmentChart"></canvas>
-      </div>
-    </div>
-  </div>
 
-  <script src="/static/hr/heatmap.js"></script>
+    <div class="main-content">
+        <div class="header">
+            <h1>Employee Heatmap</h1>
+            <div class="user-info">
+                <div class="user-avatar">HR</div>
+                <div>
+                    <div class="user-name">HR Manager</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="page-header">
+                <h2>Employee Activity & Performance Heatmap</h2>
+                <div class="header-actions">
+                    <div class="view-controls">
+                        <select class="view-select" id="heatmapView">
+                            <option value="performance">Performance</option>
+                            <option value="attendance">Attendance</option>
+                            <option value="productivity">Productivity</option>
+                            <option value="engagement">Engagement</option>
+                        </select>
+                        <select class="period-select" id="heatmapPeriod">
+                            <option value="weekly">This Week</option>
+                            <option value="monthly" selected>This Month</option>
+                            <option value="quarterly">This Quarter</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-outline" id="exportHeatmapBtn">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button class="btn btn-primary" id="refreshHeatmapBtn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Heatmap Statistics -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-icon performance">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">84%</div>
+                        <div class="stat-label">Avg Performance</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon attendance">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">96%</div>
+                        <div class="stat-label">Avg Attendance</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon productivity">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">78%</div>
+                        <div class="stat-label">Avg Productivity</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon engagement">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">82%</div>
+                        <div class="stat-label">Avg Engagement</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmap Controls -->
+            <div class="heatmap-controls">
+                <div class="control-group">
+                    <label>Department Filter</label>
+                    <select class="filter-select" id="departmentFilter">
+                        <option value="all">All Departments</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="it">IT</option>
+                        <option value="hr">HR</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="finance">Finance</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Team Size</label>
+                    <select class="filter-select" id="teamSizeFilter">
+                        <option value="all">All Teams</option>
+                        <option value="small">Small (1-5)</option>
+                        <option value="medium">Medium (6-15)</option>
+                        <option value="large">Large (16+)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Color Scale</label>
+                    <select class="filter-select" id="colorScale">
+                        <option value="performance">Performance</option>
+                        <option value="attendance">Attendance</option>
+                        <option value="productivity">Productivity</option>
+                        <option value="composite">Composite Score</option>
+                    </select>
+                </div>
+                <div class="control-actions">
+                    <button class="btn btn-secondary" id="resetFiltersBtn">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn" id="applyFiltersBtn">
+                        <i class="fas fa-filter"></i> Apply
+                    </button>
+                </div>
+            </div>
+
+            <!-- Heatmap Visualization -->
+            <div class="heatmap-container">
+                <div class="heatmap-header">
+                    <h3>Employee Performance Heatmap</h3>
+                    <div class="heatmap-legend">
+                        <span class="legend-label">Low</span>
+                        <div class="legend-gradient">
+                            <div class="gradient-stop" style="background-color: #ff6b6b"></div>
+                            <div class="gradient-stop" style="background-color: #ffd166"></div>
+                            <div class="gradient-stop" style="background-color: #06d6a0"></div>
+                            <div class="gradient-stop" style="background-color: #118ab2"></div>
+                        </div>
+                        <span class="legend-label">High</span>
+                    </div>
+                </div>
+                
+                <div class="heatmap-grid" id="heatmapGrid">
+                    <!-- Heatmap cells will be generated dynamically -->
+                </div>
+            </div>
+
+            <!-- Department Breakdown -->
+            <div class="department-breakdown">
+                <h3>Department Performance Breakdown</h3>
+                <div class="department-cards">
+                    <div class="department-card">
+                        <div class="department-header">
+                            <div class="department-icon marketing">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                            <div class="department-info">
+                                <h4>Marketing</h4>
+                                <span class="employee-count">42 Employees</span>
+                            </div>
+                        </div>
+                        <div class="performance-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Performance</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 82%"></div>
+                                </div>
+                                <span class="metric-value">82%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Attendance</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 94%"></div>
+                                </div>
+                                <span class="metric-value">94%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Productivity</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 75%"></div>
+                                </div>
+                                <span class="metric-value">75%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="department-card">
+                        <div class="department-header">
+                            <div class="department-icon it">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <div class="department-info">
+                                <h4>Information Technology</h4>
+                                <span class="employee-count">68 Employees</span>
+                            </div>
+                        </div>
+                        <div class="performance-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Performance</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 88%"></div>
+                                </div>
+                                <span class="metric-value">88%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Attendance</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 96%"></div>
+                                </div>
+                                <span class="metric-value">96%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Productivity</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 85%"></div>
+                                </div>
+                                <span class="metric-value">85%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="department-card">
+                        <div class="department-header">
+                            <div class="department-icon hr">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="department-info">
+                                <h4>Human Resources</h4>
+                                <span class="employee-count">28 Employees</span>
+                            </div>
+                        </div>
+                        <div class="performance-metrics">
+                            <div class="metric">
+                                <span class="metric-label">Performance</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 79%"></div>
+                                </div>
+                                <span class="metric-value">79%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Attendance</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 98%"></div>
+                                </div>
+                                <span class="metric-value">98%</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Productivity</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" style="width: 72%"></div>
+                                </div>
+                                <span class="metric-value">72%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Insights -->
+            <div class="insights-section">
+                <h3>Performance Insights</h3>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <div class="insight-header">
+                            <i class="fas fa-trophy"></i>
+                            <h4>Top Performers</h4>
+                        </div>
+                        <div class="insight-content">
+                            <div class="top-performer">
+                                <span class="rank">1</span>
+                                <span class="name">Sarah Johnson</span>
+                                <span class="score">94%</span>
+                            </div>
+                            <div class="top-performer">
+                                <span class="rank">2</span>
+                                <span class="name">Michael Chen</span>
+                                <span class="score">92%</span>
+                            </div>
+                            <div class="top-performer">
+                                <span class="rank">3</span>
+                                <span class="name">Emily Rodriguez</span>
+                                <span class="score">91%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-header">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Trending Up</h4>
+                        </div>
+                        <div class="insight-content">
+                            <div class="trend-item">
+                                <span class="name">David Wilson</span>
+                                <span class="trend up">+12%</span>
+                            </div>
+                            <div class="trend-item">
+                                <span class="name">Jennifer Lee</span>
+                                <span class="trend up">+8%</span>
+                            </div>
+                            <div class="trend-item">
+                                <span class="name">Robert Kim</span>
+                                <span class="trend up">+7%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="insight-card">
+                        <div class="insight-header">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h4>Needs Attention</h4>
+                        </div>
+                        <div class="insight-content">
+                            <div class="attention-item">
+                                <span class="name">Alex Thompson</span>
+                                <span class="reason">Low Productivity</span>
+                            </div>
+                            <div class="attention-item">
+                                <span class="name">Maria Garcia</span>
+                                <span class="reason">Frequent Absences</span>
+                            </div>
+                            <div class="attention-item">
+                                <span class="name">James Wilson</span>
+                                <span class="reason">Performance Drop</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="heatmap.js"></script>
 </body>
 </html>

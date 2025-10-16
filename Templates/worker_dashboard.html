@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worker Dashboard</title>
+<link rel="stylesheet" href="worker_dashboard.css">
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="dashboard-container">
+
+  <!-- Header -->
+  <div class="dashboard-header">
+    <img src="assests\worker-avatar.jpeg" alt="Worker Avatar" class="avatar">
+    <div class="header-text">
+      <h1>Welcome, <span id="worker-name">Worker</span>!</h1>
+      <p>Here’s your daily overview</p>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="stats">
+    <div class="stat-box">
+      <img src="assets/tasks-icon.png" class="stat-icon">
+      <h2 id="total-tasks">0</h2>
+      <p>Total Tasks</p>
+    </div>
+    <div class="stat-box">
+      <img src="assets/pending-icon.png" class="stat-icon">
+      <h2 id="pending-tasks">0</h2>
+      <p>Pending</p>
+    </div>
+    <div class="stat-box">
+      <img src="assets/inprogress-icon.png" class="stat-icon">
+      <h2 id="inprogress-tasks">0</h2>
+      <p>In Progress</p>
+    </div>
+    <div class="stat-box">
+      <img src="assets/completed-icon.png" class="stat-icon">
+      <h2 id="completed-tasks">0</h2>
+      <p>Completed</p>
+    </div>
+  </div>
+
+  <!-- Notifications -->
+  <div class="notifications">
+    <h2>Notifications <img src="assets/notification-icon.png" class="section-icon"></h2>
+    <ul id="notifications-list"></ul>
+  </div>
+
+  <!-- Tasks Table -->
+  <div class="tasks">
+    <h2>Your Tasks <img src="assets/tasks-icon.png" class="section-icon"></h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Status</th>
+          <th>Priority</th>
+          <th>Machine</th>
+          <th>Deadline</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tasks-table"></tbody>
+    </table>
+  </div>
+
+  <!-- Machinery Assigned -->
+  <div class="machinery">
+    <h2>Assigned Machines <img src="assets/machine-icon.png" class="section-icon"></h2>
+    <div class="machine-cards" id="machinery-table"></div>
+  </div>
+
+  <!-- Links -->
+  <div class="links">
+    <a href="skill_profile.html" class="link-btn">
+      <img src="assets/skill-icon.png" class="link-icon"> Skill Profile
+    </a>
+    <a href="training.html" class="link-btn">
+      <img src="assets/training-icon.png" class="link-icon"> Training Page
+    </a>
+  </div>
+</div>
+
+<!-- JS for Particle Background and Data Fetching -->
+<script src="worker_dashboard.js"></script>
+</body>
+</html>

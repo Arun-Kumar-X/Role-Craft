@@ -3,9 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login Page</title>
-  <link rel="stylesheet" href="static/login.css" />
+  <title>Login - Role-Craft</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
     /* Canvas for animated background */
     canvas#bgAnimation {
       position: fixed;
@@ -16,19 +31,371 @@
       z-index: -1;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #667eea, #764ba2, #a78bfa);
+    }
+
+    .logo-container {
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .logo-background {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-background::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 3s infinite linear;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    .logo {
+      width: 70px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* Makes the logo white */
+    }
+
+    .logo-text {
+      color: #2D336B;
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 5px;
+    }
+
+    .logo-subtext {
+      color: #7886C7;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    h2 {
+      color: #2D336B;
+      margin-bottom: 30px;
+      font-weight: 600;
+      font-size: 28px;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      border-radius: 3px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .input-box {
+      position: relative;
+      margin-bottom: 5px;
+    }
+
+    .input-box input,
+    .input-box select {
+      width: 100%;
+      padding: 15px 50px 15px 20px;
+      border: 2px solid #E2E8F0;
+      border-radius: 12px;
+      background: white;
+      color: #2D336B;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      outline: none;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      appearance: none;
+    }
+
+    .input-box input:focus,
+    .input-box select:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .input-box input::placeholder {
+      color: #A0AEC0;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7886C7;
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    .btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(20, 20);
+        opacity: 0;
+      }
+    }
+
+    .forgot-password {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .forgot-password a {
+      color: #7886C7;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .forgot-password a:hover {
+      color: #667eea;
+      text-decoration: underline;
+    }
+
+    .role-hint {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+      font-size: 12px;
+      color: #7886C7;
+      background: rgba(120, 134, 199, 0.1);
+      padding: 12px 15px;
+      border-radius: 10px;
+    }
+
+    .role-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .role-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .hr-color { background: #667eea; }
+    .supervisor-color { background: #764ba2; }
+    .worker-color { background: #a78bfa; }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .container {
+        margin: 20px;
+        padding: 30px 25px;
+      }
+      
+      .logo-background {
+        width: 85px;
+        height: 85px;
+      }
+      
+      .logo {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .logo-text {
+        font-size: 24px;
+      }
+      
+      h2 {
+        font-size: 24px;
+      }
+      
+      .role-hint {
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+      }
+    }
+
+    /* Floating animation for the container */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .container {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Loading animation for form submission */
+    .btn.loading {
+      pointer-events: none;
+    }
+
+    .btn.loading::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Custom select arrow */
+    .input-box select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%237886C7' d='M6 8.825L1.175 4 2.238 2.938 6 6.7l3.763-3.762L10.825 4z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 20px center;
+      background-size: 12px;
+    }
   </style>
 </head>
 <body>
   <canvas id="bgAnimation"></canvas>
 
   <div class="container">
+    <div class="logo-container">
+      <div class="logo-background">
+        <div class="logo">
+          <!-- Logo with transparent background -->
+          <img src="..\static\assests\logo.png" alt="Role-Craft Logo" onerror="this.style.display='none'; this.parentNode.innerHTML='RC'; this.parentNode.style.fontSize='24px'; this.parentNode.style.color='white'; this.parentNode.style.fontWeight='bold'; this.parentNode.style.display='flex'; this.parentNode.style.alignItems='center'; this.parentNode.style.justifyContent='center';">
+        </div>
+      </div>
+      <div class="logo-text">Role-Craft</div>
+      <div class="logo-subtext">Employee Management System</div>
+    </div>
+
     <h2>Login</h2>
-    <form action="{{ url_for('login') }}" method="post">
+    <form action="{{ url_for('login') }}" method="post" id="loginForm">
       <div class="input-box">
         <input type="text" name="emp_id" placeholder="Employee ID" required />
+        <div class="input-icon">👤</div>
       </div>
       <div class="input-box">
         <input type="password" name="password" placeholder="Password" required />
+        <div class="input-icon">🔒</div>
       </div>
 
       <!-- Role Dropdown -->
@@ -39,10 +406,35 @@
           <option value="supervisor">Supervisor</option>
           <option value="worker">Worker</option>
         </select>
+        <div class="input-icon">👥</div>
       </div>
 
-      <button type="submit" class="btn">Login</button>
+      <button type="submit" class="btn" id="loginBtn">
+        <span id="btnText">Login</span>
+      </button>
     </form>
+
+    <div class="forgot-password">
+      <a href="#">
+        <span>🔐</span>
+        Forgot Password?
+      </a>
+    </div>
+
+    <div class="role-hint">
+      <div class="role-item">
+        <div class="role-color hr-color"></div>
+        <span>HR Manager</span>
+      </div>
+      <div class="role-item">
+        <div class="role-color supervisor-color"></div>
+        <span>Supervisor</span>
+      </div>
+      <div class="role-item">
+        <div class="role-color worker-color"></div>
+        <span>Worker</span>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -50,7 +442,7 @@
     const canvas = document.getElementById("bgAnimation");
     const ctx = canvas.getContext("2d");
     let particlesArray = [];
-    const numParticles = 90; // slightly more for richer effect
+    const numParticles = 90;
 
     // Resize canvas
     function resizeCanvas() {
@@ -76,7 +468,7 @@
         this.color = color;
         this.speedX = speedX;
         this.speedY = speedY;
-        this.alpha = Math.random() * 0.6 + 0.2; // glow variation
+        this.alpha = Math.random() * 0.6 + 0.2;
       }
 
       update() {
@@ -162,6 +554,56 @@
 
     init();
     animate();
+
+    // Form submission handling
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const loginBtn = document.getElementById('loginBtn');
+      const btnText = document.getElementById('btnText');
+      
+      // Show loading state
+      loginBtn.classList.add('loading');
+      btnText.textContent = 'Logging in...';
+      
+      // Simulate login process
+      setTimeout(() => {
+        // In a real application, this would be an API call
+        console.log('Login attempted with:', {
+          emp_id: this.emp_id.value,
+          role: this.role.value
+        });
+        
+        // Remove loading state (in real app, this would be after response)
+        loginBtn.classList.remove('loading');
+        btnText.textContent = 'Login';
+        
+        // Here you would typically redirect or show success/error
+        // For demo purposes, we'll just log to console
+      }, 2000);
+    });
+
+    // Add focus effects to form elements
+    document.querySelectorAll('input, select').forEach(element => {
+      element.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'scale(1.02)';
+      });
+      
+      element.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'scale(1)';
+      });
+    });
+
+    // Add input validation styling
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', function() {
+        if (this.value.length > 0) {
+          this.style.borderColor = '#667eea';
+        } else {
+          this.style.borderColor = '#E2E8F0';
+        }
+      });
+    });
   </script>
 </body>
 </html>

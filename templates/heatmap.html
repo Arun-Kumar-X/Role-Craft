@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employee Performance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="heatmap.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <header>
+      <h1>Employee Performance Dashboard</h1>
+      <p class="subtitle">Track and analyze employee performance metrics across departments</p>
+    </header>
+    
+    <div class="filters">
+      <button class="filter-btn active">All Departments</button>
+      <button class="filter-btn">Production</button>
+      <button class="filter-btn">Quality Control</button>
+      <button class="filter-btn">Maintenance</button>
+      <button class="filter-btn">Safety</button>
+    </div>
+    
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-value">87%</div>
+        <div class="stat-label">Overall Performance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="stat-value">+12%</div>
+        <div class="stat-label">Quarterly Growth</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div class="stat-value">24</div>
+        <div class="stat-label">Top Performers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-bullseye"></i>
+        </div>
+        <div class="stat-value">94%</div>
+        <div class="stat-label">Target Achievement</div>
+      </div>
+    </div>
+    
+    <div class="charts-container">
+      <div class="chart-card">
+        <h2 class="chart-title"><i class="fas fa-chart-line"></i> Performance Trend Analysis</h2>
+        <canvas id="curveChart"></canvas>
+      </div>
+      
+      <div class="chart-card">
+        <h2 class="chart-title"><i class="fas fa-chart-pie"></i> Skill Distribution</h2>
+        <canvas id="skillChart"></canvas>
+      </div>
+    </div>
+    
+    <div class="heatmap-container">
+      <h2 class="chart-title"><i class="fas fa-th"></i> Performance Heatmap by Skill & Month</h2>
+      <div class="heatmap" id="heatmap"></div>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #2D336B;"></div>
+          <span>High Performance (90-100)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #7886C7;"></div>
+          <span>Medium Performance (80-89)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background-color: #A9B5DF;"></div>
+          <span>Low Performance (Below 80)</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="charts-container">
+      <div class="employee-list">
+        <h2 class="chart-title"><i class="fas fa-user-check"></i> Top Performers</h2>
+        <div class="employee-card">
+          <div class="employee-avatar">JD</div>
+          <div class="employee-info">
+            <div class="employee-name">John Davis</div>
+            <div class="employee-role">Machine Operator</div>
+            <span class="performance-badge badge-high">Top Performer</span>
+          </div>
+          <div class="employee-score">96%</div>
+        </div>
+        <div class="employee-card">
+          <div class="employee-avatar">SM</div>
+          <div class="employee-info">
+            <div class="employee-name">Sarah Miller</div>
+            <div class="employee-role">Quality Inspector</div>
+            <span class="performance-badge badge-high">Consistent</span>
+          </div>
+          <div class="employee-score">94%</div>
+        </div>
+        <div class="employee-card">
+          <div class="employee-avatar">RJ</div>
+          <div class="employee-info">
+            <div class="employee-name">Robert Johnson</div>
+            <div class="employee-role">Maintenance Tech</div>
+            <span class="performance-badge badge-medium">Improving</span>
+          </div>
+          <div class="employee-score">87%</div>
+        </div>
+        <div class="employee-card">
+          <div class="employee-avatar">EW</div>
+          <div class="employee-info">
+            <div class="employee-name">Emma Wilson</div>
+            <div class="employee-role">Safety Officer</div>
+            <span class="performance-badge badge-high">Excellent</span>
+          </div>
+          <div class="employee-score">98%</div>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <h2 class="chart-title"><i class="fas fa-chart-bar"></i> Department Comparison</h2>
+        <canvas id="departmentChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

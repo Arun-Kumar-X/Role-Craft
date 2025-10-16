@@ -35,6 +35,14 @@ class Task(db.Model):
     description = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(50), default="pending")
 
+    # Extended fields
+    category = db.Column(db.String(50), nullable=True)
+    priority = db.Column(db.String(20), default="medium")
+    start_date = db.Column(db.Date, nullable=True)
+    due_date = db.Column(db.Date, nullable=True)
+    estimated_hours = db.Column(db.Integer, nullable=True)
+    tags = db.Column(db.String(250), nullable=True)  # comma-separated tags
+
     assigned_worker_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     created_by_supervisor_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 

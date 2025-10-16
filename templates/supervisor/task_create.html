@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assign Task - Role-Craft</title>
-    <link rel="stylesheet" href="/static/supervisor/task_assign.css">
+    <title>Create Task - Role-Craft</title>
+    <link rel="stylesheet" href="/static/supervisor/task_create.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="dashboard-container">
         <nav class="sidebar">
-            <!-- Same sidebar as task_list.html -->
             <div class="sidebar-header">
                 <div class="logo">
-                    <img src="..\static\assests\logo.png" alt="Role-Craft" onerror="this.style.display='none'">
+                    <img src="../static/assests/logo.png" alt="Role-Craft" onerror="this.style.display='none'">
                     <span>Supervisor</span>
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li><a href="supervisor_dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="task_list.html"><i class="fas fa-tasks"></i> All Tasks</a></li>
-                <li class="active"><a href="task_assign.html"><i class="fas fa-plus-circle"></i> Assign Task</a></li>
-                <li><a href="task_review.html"><i class="fas fa-check-double"></i> Review Tasks</a></li>
-                <li><a href="worker_performance.html"><i class="fas fa-chart-line"></i> Performance</a></li>
-                <li><a href="notifications_supervisor.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="{{ url_for('supervisor_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="{{ url_for('task_list') }}"><i class="fas fa-tasks"></i> All Tasks</a></li>
+                <li class="active"><a href="{{ url_for('task_create') }}"><i class="fas fa-plus-circle"></i> Create Task</a></li>
+                <li><a href="{{ url_for('worker_performance') }}"><i class="fas fa-chart-line"></i> Performance</a></li>
+                <li><a href="{{ url_for('notifications_supervisor') }}"><i class="fas fa-bell"></i> Notifications</a></li>
             </ul>
             <div class="sidebar-footer">
                 <div class="user-info">
@@ -39,7 +37,7 @@
 
         <main class="main-content">
             <header class="content-header">
-                <h1>Assign New Task</h1>
+                <h1>Create New Task</h1>
                 <div class="header-actions">
                     <button class="btn btn-secondary" id="saveDraft">
                         <i class="fas fa-save"></i> Save Draft
@@ -51,7 +49,7 @@
             </header>
 
             <div class="content-body">
-                <form id="taskAssignForm" class="task-form">
+                <form id="taskCreateForm" class="task-form" method="POST" action="{{ url_for('task_create') }}">
                     <div class="form-section">
                         <h3><i class="fas fa-info-circle"></i> Task Information</h3>
                         <div class="form-group">
@@ -87,24 +85,7 @@
                     </div>
 
                     <div class="form-section">
-                        <h3><i class="fas fa-user-friends"></i> Assignment & Timeline</h3>
-                        <div class="form-group">
-                            <label for="taskAssignee">Assign To *</label>
-                            <div class="assignee-selector">
-                                <select id="taskAssignee" name="assignee" required>
-                                    <option value="">Select team member</option>
-                                    <option value="john">John Doe (Developer)</option>
-                                    <option value="sarah">Sarah Wilson (Designer)</option>
-                                    <option value="mike">Mike Johnson (Tester)</option>
-                                    <option value="emma">Emma Davis (Operations)</option>
-                                    <option value="david">David Brown (Support)</option>
-                                </select>
-                                <div class="assignee-preview" id="assigneePreview">
-                                    <i class="fas fa-user"></i>
-                                    <span>Select a team member to see their workload</span>
-                                </div>
-                            </div>
-                        </div>
+                        <h3><i class="fas fa-user-friends"></i> Timeline</h3>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="taskStartDate">Start Date *</label>
@@ -129,6 +110,7 @@
                                 <input type="text" id="taskTags" placeholder="Add tags (press Enter)">
                                 <div class="tags-container" id="tagsContainer"></div>
                             </div>
+                            <input type="hidden" name="tags" id="tagsHidden">
                         </div>
                         <div class="form-group">
                             <label for="taskAttachments">Attachments</label>
@@ -149,7 +131,7 @@
                             <i class="fas fa-redo"></i> Reset
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Assign Task
+                            <i class="fas fa-paper-plane"></i> Create Task
                         </button>
                     </div>
                 </form>
@@ -157,19 +139,6 @@
         </main>
     </div>
 
-    <!-- Preview Modal -->
-    <div class="modal" id="previewModal">
-        <div class="modal-content large">
-            <div class="modal-header">
-                <h3>Task Preview</h3>
-                <button class="close-btn" id="closePreview">&times;</button>
-            </div>
-            <div class="modal-body" id="previewContent">
-                <!-- Preview content will be loaded here -->
-            </div>
-        </div>
-    </div>
-
-    <script src="/static/supervisor/task_assign.js"></script>
+    <script src="/static/supervisor/task_create.js"></script>
 </body>
 </html>

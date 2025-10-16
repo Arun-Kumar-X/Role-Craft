@@ -1,4 +1,31 @@
 // Task Assign JavaScript
+
+const form = document.getElementById("taskAssignForm");
+const tagsInput = document.getElementById("taskTags");
+const tagsHidden = document.getElementById("tagsHidden");
+const tagsContainer = document.getElementById("tagsContainer");
+
+let tags = [];
+
+tagsInput.addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        const tag = tagsInput.value.trim();
+        if (tag && !tags.includes(tag)) {
+            tags.push(tag);
+            const span = document.createElement("span");
+            span.className = "tag";
+            span.textContent = tag;
+            tagsContainer.appendChild(span);
+            tagsInput.value = "";
+        }
+    }
+});
+
+form.addEventListener("submit", function() {
+    tagsHidden.value = tags.join(",");
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeTaskAssign();
     setupEventListeners();

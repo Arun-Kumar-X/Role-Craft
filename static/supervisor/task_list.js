@@ -381,3 +381,16 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+function openTaskModal(taskId) {
+    fetch(`/supervisor/task_details/${taskId}`)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById("taskModalBody").innerHTML = html;
+            document.getElementById("taskModal").style.display = "block";
+        });
+}
+
+document.getElementById("closeModal").onclick = function() {
+    document.getElementById("taskModal").style.display = "none";
+};

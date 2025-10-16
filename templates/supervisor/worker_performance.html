@@ -1,191 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worker Performance - Role-Craft</title>
-    <link rel="stylesheet" href="/static/supervisor/worker_performance.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Worker Performance - Role-Craft</title>
+  <link rel="stylesheet" href="/static/supervisor/worker_performance.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div class="dashboard-container">
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <img src="..\static\assests\logo.png" alt="Role-Craft" onerror="this.style.display='none'">
-                    <span>Supervisor</span>
-                </div>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="supervisor_dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="task_list.html"><i class="fas fa-tasks"></i> All Tasks</a></li>
-                <li><a href="task_assign.html"><i class="fas fa-plus-circle"></i> Assign Task</a></li>
-                <li><a href="task_review.html"><i class="fas fa-check-double"></i> Review Tasks</a></li>
-                <li class="active"><a href="worker_performance.html"><i class="fas fa-chart-line"></i> Performance</a></li>
-                <li><a href="notifications_supervisor.html"><i class="fas fa-bell"></i> Notifications</a></li>
-            </ul>
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <div class="user-avatar">SP</div>
-                    <div class="user-details">
-                        <span class="user-name">Supervisor</span>
-                        <span class="user-role">Team Lead</span>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <main class="main-content">
-            <header class="content-header">
-                <h1>Worker Performance</h1>
-                <div class="header-actions">
-                    <select id="timeRange">
-                        <option value="7">Last 7 Days</option>
-                        <option value="30" selected>Last 30 Days</option>
-                        <option value="90">Last Quarter</option>
-                        <option value="365">Last Year</option>
-                    </select>
-                    <button class="btn btn-primary" id="exportReport">
-                        <i class="fas fa-download"></i> Export Report
-                    </button>
-                </div>
-            </header>
-
-            <div class="content-body">
-                <!-- Performance Overview -->
-                <div class="performance-overview">
-                    <div class="overview-card">
-                        <div class="overview-icon">
-                            <i class="fas fa-tachometer-alt"></i>
-                        </div>
-                        <div class="overview-content">
-                            <h3>Team Performance Score</h3>
-                            <div class="score">87<span>%</span></div>
-                            <div class="trend positive">
-                                <i class="fas fa-arrow-up"></i> 5.2% from last period
-                            </div>
-                        </div>
-                    </div>
-                    <div class="metrics-grid">
-                        <div class="metric-card">
-                            <div class="metric-value">94%</div>
-                            <div class="metric-label">On-Time Completion</div>
-                            <div class="metric-trend positive">+2.1%</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-value">88%</div>
-                            <div class="metric-label">Quality Score</div>
-                            <div class="metric-trend positive">+1.8%</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-value">12.4h</div>
-                            <div class="metric-label">Avg. Task Duration</div>
-                            <div class="metric-trend negative">-0.8h</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-value">96%</div>
-                            <div class="metric-label">Satisfaction Rate</div>
-                            <div class="metric-trend positive">+3.2%</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Charts Section -->
-                <div class="charts-section">
-                    <div class="chart-card large">
-                        <div class="chart-header">
-                            <h3>Performance Trends</h3>
-                            <div class="chart-legend">
-                                <div class="legend-item">
-                                    <span class="legend-color completion"></span>
-                                    <span>Completion Rate</span>
-                                </div>
-                                <div class="legend-item">
-                                    <span class="legend-color quality"></span>
-                                    <span>Quality Score</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="performanceTrendChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3>Task Distribution</h3>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="taskDistributionChart"></canvas>
-                        </div>
-                    </div>
-
-                    <div class="chart-card">
-                        <div class="chart-header">
-                            <h3>Skill Matrix</h3>
-                        </div>
-                        <div class="chart-container">
-                            <canvas id="skillMatrixChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Worker Rankings -->
-                <div class="rankings-section">
-                    <div class="section-header">
-                        <h2>Worker Rankings</h2>
-                        <div class="view-options">
-                            <button class="view-option active" data-metric="overall">Overall</button>
-                            <button class="view-option" data-metric="efficiency">Efficiency</button>
-                            <button class="view-option" data-metric="quality">Quality</button>
-                            <button class="view-option" data-metric="productivity">Productivity</button>
-                        </div>
-                    </div>
-                    <div class="rankings-list" id="rankingsList">
-                        <!-- Worker rankings will be loaded here -->
-                    </div>
-                </div>
-
-                <!-- Performance Details -->
-                <div class="details-section">
-                    <div class="detail-card">
-                        <div class="detail-header">
-                            <h3>Performance Insights</h3>
-                            <i class="fas fa-lightbulb"></i>
-                        </div>
-                        <div class="insights-list" id="insightsList">
-                            <!-- Insights will be loaded here -->
-                        </div>
-                    </div>
-                    <div class="detail-card">
-                        <div class="detail-header">
-                            <h3>Improvement Areas</h3>
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="improvement-list" id="improvementList">
-                            <!-- Improvement areas will be loaded here -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Worker Detail Modal -->
-    <div class="modal" id="workerModal">
-        <div class="modal-content large">
-            <div class="modal-header">
-                <h3>Worker Performance Details</h3>
-                <button class="close-btn" id="closeWorkerModal">&times;</button>
-            </div>
-            <div class="modal-body" id="workerModalBody">
-                <!-- Worker details will be loaded here -->
-            </div>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <img src="../static/assests/logo.png" alt="Role-Craft" onerror="this.style.display='none'">
+          <span>Supervisor</span>
         </div>
-    </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('supervisor_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('task_list') }}"><i class="fas fa-tasks"></i> All Tasks</a></li>
+        <li><a href="{{ url_for('task_create') }}"><i class="fas fa-plus-circle"></i> Create Task</a></li>
+        <li class="active"><a href="{{ url_for('worker_performance') }}"><i class="fas fa-chart-line"></i> Performance</a></li>
+        <li><a href="{{ url_for('notifications_supervisor') }}"><i class="fas fa-bell"></i> Notifications</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">SP</div>
+          <div class="user-details">
+            <span class="user-name">Supervisor</span>
+            <span class="user-role">Team Lead</span>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-    <script src="/static/supervisor/worker_performance.js"></script>
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="content-header">
+        <h1>Worker Performance</h1>
+        <div class="header-actions">
+          <select id="timeRange">
+            <option value="7">Last 7 Days</option>
+            <option value="30" selected>Last 30 Days</option>
+            <option value="90">Last Quarter</option>
+            <option value="365">Last Year</option>
+          </select>
+          <button class="btn btn-primary" id="exportReport">
+            <i class="fas fa-download"></i> Export Report
+          </button>
+        </div>
+      </header>
+
+      <div class="content-body">
+        <!-- Performance Overview -->
+        <div class="performance-overview">
+          <div class="overview-card">
+            <h3>Team Performance Score</h3>
+            <div class="score">{{ team_score }}%</div>
+          </div>
+          <div class="overview-card">
+            <h3>On-Time Completion</h3>
+            <div class="metric">{{ on_time }}%</div>
+          </div>
+          <div class="overview-card">
+            <h3>Avg. Task Duration</h3>
+            <div class="metric">{{ avg_duration }}h</div>
+          </div>
+          <div class="overview-card">
+            <h3>Total Tasks</h3>
+            <div class="metric">{{ total_tasks }}</div>
+          </div>
+          <div class="overview-card">
+            <h3>Completed Tasks</h3>
+            <div class="metric">{{ completed_tasks }}</div>
+          </div>
+          <div class="overview-card">
+            <h3>In Progress</h3>
+            <div class="metric">{{ in_progress_tasks }}</div>
+          </div>
+          <div class="overview-card">
+            <h3>Pending</h3>
+            <div class="metric">{{ pending_tasks }}</div>
+          </div>
+        </div>
+
+        <!-- Charts Section (gimmick) -->
+        <div class="charts-section">
+          <div class="chart-card large">
+            <div class="chart-header">
+              <h3>Performance Trends</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="performanceTrendChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Skill Matrix</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="skillMatrixChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Worker Rankings -->
+        <div class="rankings-section">
+          <h2>Worker Rankings</h2>
+          <table class="rankings-table">
+            <thead>
+              <tr>
+                <th>Worker</th>
+                <th>Role</th>
+                <th>Completed</th>
+                <th>In Progress</th>
+                <th>Pending</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for w in worker_rankings %}
+              <tr>
+                <td>{{ w.name }}</td>
+                <td>{{ w.role }}</td>
+                <td>{{ w.tasks_completed }}</td>
+                <td>{{ w.in_progress }}</td>
+                <td>{{ w.pending }}</td>
+                <td>{{ w.score }}</td>
+              </tr>
+              {% else %}
+              <tr><td colspan="6">No workers found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="details-section">
+          <div class="detail-card">
+            <div class="detail-header">
+              <h3>Performance Insights</h3>
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="insights-list">
+              <p>✔ Team performance is at {{ team_score }}% overall.</p>
+              <p>✔ Average task duration is {{ avg_duration }} hours.</p>
+              <p>✔ {{ completed_tasks }} tasks completed out of {{ total_tasks }} total.</p>
+            </div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-header">
+              <h3>Improvement Areas</h3>
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="improvement-list">
+              <p>⚠ Focus on reducing pending tasks ({{ pending_tasks }} currently).</p>
+              <p>⚠ Encourage timely completion (on-time rate {{ on_time }}%).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Worker Performance - Role-Craft</title>
+  <link rel="stylesheet" href="/static/supervisor/worker_performance.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <img src="../static/assests/logo.png" alt="Role-Craft" onerror="this.style.display='none'">
+          <span>Supervisor</span>
+        </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('supervisor_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li><a href="{{ url_for('task_list') }}"><i class="fas fa-tasks"></i> All Tasks</a></li>
+        <li><a href="{{ url_for('task_create') }}"><i class="fas fa-plus-circle"></i> Create Task</a></li>
+        <li class="active"><a href="{{ url_for('worker_performance') }}"><i class="fas fa-chart-line"></i> Performance</a></li>
+        <li><a href="{{ url_for('notifications_supervisor') }}"><i class="fas fa-bell"></i> Notifications</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">SP</div>
+          <div class="user-details">
+            <span class="user-name">Supervisor</span>
+            <span class="user-role">Team Lead</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="content-header">
+        <h1>Worker Performance</h1>
+        <div class="header-actions">
+          <select id="timeRange">
+            <option value="7">Last 7 Days</option>
+            <option value="30" selected>Last 30 Days</option>
+            <option value="90">Last Quarter</option>
+            <option value="365">Last Year</option>
+          </select>
+          <button class="btn btn-primary" id="exportReport">
+            <i class="fas fa-download"></i> Export Report
+          </button>
+        </div>
+      </header>
+
+      <div class="content-body">
+        <!-- Performance Overview -->
+        <div class="performance-overview">
+          <div class="overview-card">
+            <h3>Team Performance Score</h3>
+            <div class="score">{{ team_score }}%</div>
+          </div>
+          <div class="overview-card">
+            <h3>On-Time Completion</h3>
+            <div class="metric">{{ on_time }}%</div>
+          </div>
+          <div class="overview-card">
+            <h3>Avg. Task Duration</h3>
+            <div class="metric">{{ avg_duration }}h</div>
+          </div>
+          <div class="overview-card">
+            <h3>Total Tasks</h3>
+            <div class="metric">{{ total_tasks }}</div>
+          </div>
+          <div class="overview-card">
+            <h3>Completed Tasks</h3>
+            <div class="metric">{{ completed_tasks }}</div>
+          </div>
+          <div class="overview-card">
+            <h3>In Progress</h3>
+            <div class="metric">{{ in_progress_tasks }}</div>
+          </div>
+          <div class="overview-card">
+            <h3>Pending</h3>
+            <div class="metric">{{ pending_tasks }}</div>
+          </div>
+        </div>
+
+        <!-- Charts Section (gimmick) -->
+        <div class="charts-section">
+          <div class="chart-card large">
+            <div class="chart-header">
+              <h3>Performance Trends</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="performanceTrendChart"></canvas>
+            </div>
+          </div>
+
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Skill Matrix</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="skillMatrixChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Worker Rankings -->
+        <div class="rankings-section">
+          <h2>Worker Rankings</h2>
+          <table class="rankings-table">
+            <thead>
+              <tr>
+                <th>Worker</th>
+                <th>Role</th>
+                <th>Completed</th>
+                <th>In Progress</th>
+                <th>Pending</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for w in worker_rankings %}
+              <tr>
+                <td>{{ w.name }}</td>
+                <td>{{ w.role }}</td>
+                <td>{{ w.tasks_completed }}</td>
+                <td>{{ w.in_progress }}</td>
+                <td>{{ w.pending }}</td>
+                <td>{{ w.score }}</td>
+              </tr>
+              {% else %}
+              <tr><td colspan="6">No workers found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Insights Section -->
+        <div class="details-section">
+          <div class="detail-card">
+            <div class="detail-header">
+              <h3>Performance Insights</h3>
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="insights-list">
+              <p>✔ Team performance is at {{ team_score }}% overall.</p>
+              <p>✔ Average task duration is {{ avg_duration }} hours.</p>
+              <p>✔ {{ completed_tasks }} tasks completed out of {{ total_tasks }} total.</p>
+            </div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-header">
+              <h3>Improvement Areas</h3>
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="improvement-list">
+              <p>⚠ Focus on reducing pending tasks ({{ pending_tasks }} currently).</p>
+              <p>⚠ Encourage timely completion (on-time rate {{ on_time }}%).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Gimmick Chart Script -->
+  <script>
+    // Dummy data for hackathon demo
+    const ctx1 = document.getElementById('performanceTrendChart');
+    new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: ['Week 1','Week 2','Week 3','Week 4'],
+        datasets: [
+          { label: 'Completion Rate', data: [70, 80, 85, 87], borderColor: '#007bff', fill: false },
+          { label: 'Quality Score', data: [75, 78, 82, 85], borderColor: '#28a745', fill: false }
+        ]
+      }
+    });
+
+    const ctx3 = document.getElementById('skillMatrixChart');
+    new Chart(ctx3, {
+      type: 'radar',
+      data: {
+        labels: ['Python','SQL','Flask','Testing','Docs'],
+        datasets: [{
+          label: 'Team Skills',
+          data: [80,70,65,75,60],
+          backgroundColor: 'rgba(0,123,255,0.2)',
+          borderColor: '#007bff'
+        }]
+      }
+    });
+  </script>
+</body>
+</html>
+
 </body>
 </html>

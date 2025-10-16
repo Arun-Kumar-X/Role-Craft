@@ -19,12 +19,11 @@
                 </div>
             </div>
             <ul class="sidebar-menu">
-                <li class="active"><a href="supervisor_dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li><a href="task_list.html"><i class="fas fa-tasks"></i> All Tasks</a></li>
-                <li><a href="task_assign.html"><i class="fas fa-plus-circle"></i> Assign Task</a></li>
-                <li><a href="task_review.html"><i class="fas fa-check-double"></i> Review Tasks</a></li>
-                <li><a href="worker_performance.html"><i class="fas fa-chart-line"></i> Performance</a></li>
-                <li><a href="notifications_supervisor.html"><i class="fas fa-bell"></i> Notifications</a></li>
+                <li><a href="{{ url_for('supervisor_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="{{ url_for('task_list') }}"><i class="fas fa-tasks"></i> All Tasks</a></li>
+                <li><a href="{{ url_for('task_create') }}"><i class="fas fa-plus-circle"></i> Create Task</a></li>
+                <li><a href="{{ url_for('worker_performance') }}"><i class="fas fa-chart-line"></i> Performance</a></li>
+                <li><a href="{{ url_for('notifications_supervisor') }}"><i class="fas fa-bell"></i> Notifications</a></li>
             </ul>
             <div class="sidebar-footer">
                 <div class="user-info">
@@ -55,51 +54,31 @@
             <!-- Stats Overview -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-icon total-tasks">
-                        <i class="fas fa-tasks"></i>
-                    </div>
+                    <div class="stat-icon total-tasks"><i class="fas fa-tasks"></i></div>
                     <div class="stat-info">
-                        <h3>48</h3>
-                        <p>Total Tasks</p>
-                    </div>
-                    <div class="stat-trend positive">
-                        <i class="fas fa-arrow-up"></i> 12%
+                    <h3>{{ total_tasks }}</h3>
+                    <p>Total Tasks</p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon pending-tasks">
-                        <i class="fas fa-clock"></i>
-                    </div>
+                    <div class="stat-icon pending-tasks"><i class="fas fa-clock"></i></div>
                     <div class="stat-info">
-                        <h3>15</h3>
-                        <p>Pending</p>
-                    </div>
-                    <div class="stat-trend negative">
-                        <i class="fas fa-arrow-up"></i> 5%
+                    <h3>{{ pending_tasks }}</h3>
+                    <p>Pending</p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon completed-tasks">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
+                    <div class="stat-icon completed-tasks"><i class="fas fa-check-circle"></i></div>
                     <div class="stat-info">
-                        <h3>28</h3>
-                        <p>Completed</p>
-                    </div>
-                    <div class="stat-trend positive">
-                        <i class="fas fa-arrow-up"></i> 8%
+                    <h3>{{ completed_tasks }}</h3>
+                    <p>Completed</p>
                     </div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon team-performance">
-                        <i class="fas fa-users"></i>
-                    </div>
+                    <div class="stat-icon team-performance"><i class="fas fa-users"></i></div>
                     <div class="stat-info">
-                        <h3>87%</h3>
-                        <p>Team Performance</p>
-                    </div>
-                    <div class="stat-trend positive">
-                        <i class="fas fa-arrow-up"></i> 3%
+                    <h3>{{ team_performance }}%</h3>
+                    <p>Team Performance</p>
                     </div>
                 </div>
             </div>
@@ -185,95 +164,40 @@
                 </div>
 
                 <!-- Team Members -->
-                <div class="card team-members">
-                    <div class="card-header">
-                        <h3><i class="fas fa-users"></i> Team Members</h3>
-                        <button class="btn btn-secondary btn-sm">View All</button>
+                <div class="members-list">
+                {% for worker in workers %}
+                    <div class="member-card">
+                    <div class="member-avatar">{{ worker.name[:2].upper() }}</div>
+                    <div class="member-info">
+                        <h4>{{ worker.name }}</h4>
+                        <span class="member-role">{{ worker.role }}</span>
                     </div>
-                    <div class="card-body">
-                        <div class="members-list">
-                            <div class="member-card">
-                                <div class="member-avatar">JD</div>
-                                <div class="member-info">
-                                    <h4>John Doe</h4>
-                                    <span class="member-role">Developer</span>
-                                </div>
-                                <div class="member-stats">
-                                    <div class="stat">
-                                        <span class="value">12</span>
-                                        <span class="label">Tasks</span>
-                                    </div>
-                                    <div class="performance-badge high">95%</div>
-                                </div>
-                            </div>
-                            <div class="member-card">
-                                <div class="member-avatar">SW</div>
-                                <div class="member-info">
-                                    <h4>Sarah Wilson</h4>
-                                    <span class="member-role">Designer</span>
-                                </div>
-                                <div class="member-stats">
-                                    <div class="stat">
-                                        <span class="value">8</span>
-                                        <span class="label">Tasks</span>
-                                    </div>
-                                    <div class="performance-badge medium">78%</div>
-                                </div>
-                            </div>
-                            <div class="member-card">
-                                <div class="member-avatar">MJ</div>
-                                <div class="member-info">
-                                    <h4>Mike Johnson</h4>
-                                    <span class="member-role">Tester</span>
-                                </div>
-                                <div class="member-stats">
-                                    <div class="stat">
-                                        <span class="value">15</span>
-                                        <span class="label">Tasks</span>
-                                    </div>
-                                    <div class="performance-badge high">92%</div>
-                                </div>
-                            </div>
+                    <div class="member-stats">
+                        <div class="stat">
+                        <span class="value">{{ worker.tasks|length }}</span>
+                        <span class="label">Tasks</span>
                         </div>
                     </div>
+                    </div>
+                {% endfor %}
                 </div>
 
                 <!-- Urgent Tasks -->
-                <div class="card urgent-tasks">
-                    <div class="card-header">
-                        <h3><i class="fas fa-exclamation-circle"></i> Urgent Tasks</h3>
-                        <span class="badge critical">3 Critical</span>
-                    </div>
-                    <div class="card-body">
-                        <div class="task-list">
-                            <div class="task-item critical">
-                                <div class="task-info">
-                                    <h4>Server Maintenance</h4>
-                                    <p>Critical server updates required</p>
-                                    <div class="task-meta">
-                                        <span class="assignee">John Doe</span>
-                                        <span class="deadline overdue">Overdue</span>
-                                    </div>
-                                </div>
-                                <div class="task-actions">
-                                    <button class="btn btn-warning btn-sm">Take Action</button>
-                                </div>
-                            </div>
-                            <div class="task-item high">
-                                <div class="task-info">
-                                    <h4>Security Audit</h4>
-                                    <p>Quarterly security review</p>
-                                    <div class="task-meta">
-                                        <span class="assignee">Sarah Wilson</span>
-                                        <span class="deadline">Due Today</span>
-                                    </div>
-                                </div>
-                                <div class="task-actions">
-                                    <button class="btn btn-secondary btn-sm">Review</button>
-                                </div>
-                            </div>
+                <div class="task-list">
+                {% for task in urgent_tasks %}
+                    <div class="task-item critical">
+                    <div class="task-info">
+                        <h4>{{ task.name }}</h4>
+                        <p>{{ task.description }}</p>
+                        <div class="task-meta">
+                        <span class="assignee">{{ task.assigned_worker.name if task.assigned_worker else 'Unassigned' }}</span>
+                        <span class="deadline overdue">Pending</span>
                         </div>
                     </div>
+                    </div>
+                {% else %}
+                    <p>No urgent tasks.</p>
+                {% endfor %}
                 </div>
             </div>
         </main>

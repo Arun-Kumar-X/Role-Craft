@@ -1,111 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task List - Role-Craft</title>
-    <link rel="stylesheet" href="/static/supervisor/task_list.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task List - Role-Craft</title>
+  <link rel="stylesheet" href="/static/supervisor/task_list.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
-    <div class="dashboard-container">
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <img src="..\static\assests\logo.png" alt="Role-Craft" onerror="this.style.display='none'">
-                    <span>Supervisor</span>
-                </div>
-            </div>
-            <ul class="sidebar-menu">
-                <li><a href="supervisor_dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
-                <li class="active"><a href="task_list.html"><i class="fas fa-tasks"></i> All Tasks</a></li>
-                <li><a href="task_assign.html"><i class="fas fa-plus-circle"></i> Assign Task</a></li>
-                <li><a href="task_review.html"><i class="fas fa-check-double"></i> Review Tasks</a></li>
-                <li><a href="worker_performance.html"><i class="fas fa-chart-line"></i> Performance</a></li>
-                <li><a href="notifications_supervisor.html"><i class="fas fa-bell"></i> Notifications</a></li>
-            </ul>
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <div class="user-avatar">SP</div>
-                    <div class="user-details">
-                        <span class="user-name">Supervisor</span>
-                        <span class="user-role">Team Lead</span>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <main class="main-content">
-            <header class="content-header">
-                <h1>All Tasks</h1>
-                <div class="header-actions">
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Search tasks...">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="filter-group">
-                        <select id="statusFilter">
-                            <option value="all">All Status</option>
-                            <option value="pending">Pending</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="completed">Completed</option>
-                            <option value="overdue">Overdue</option>
-                        </select>
-                        <select id="priorityFilter">
-                            <option value="all">All Priority</option>
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                            <option value="urgent">Urgent</option>
-                        </select>
-                    </div>
-                </div>
-            </header>
-
-            <div class="content-body">
-                <div class="tasks-header">
-                    <div class="tasks-stats">
-                        <div class="stat">
-                            <span class="value" id="totalTasks">0</span>
-                            <span class="label">Total</span>
-                        </div>
-                        <div class="stat">
-                            <span class="value" id="pendingTasks">0</span>
-                            <span class="label">Pending</span>
-                        </div>
-                        <div class="stat">
-                            <span class="value" id="completedTasks">0</span>
-                            <span class="label">Completed</span>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" id="exportTasks">
-                        <i class="fas fa-download"></i> Export
-                    </button>
-                </div>
-
-                <div class="tasks-container">
-                    <div class="tasks-grid" id="tasksGrid">
-                        <!-- Tasks will be dynamically loaded here -->
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <!-- Task Detail Modal -->
-    <div class="modal" id="taskModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Task Details</h3>
-                <button class="close-btn" id="closeModal">&times;</button>
-            </div>
-            <div class="modal-body" id="taskModalBody">
-                <!-- Task details will be loaded here -->
-            </div>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <img src="../static/assests/logo.png" alt="Role-Craft" onerror="this.style.display='none'">
+          <span>Supervisor</span>
         </div>
-    </div>
+      </div>
+      <ul class="sidebar-menu">
+        <li><a href="{{ url_for('supervisor_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+        <li class="active"><a href="{{ url_for('task_list') }}"><i class="fas fa-tasks"></i> All Tasks</a></li>
+        <li><a href="{{ url_for('task_create') }}"><i class="fas fa-plus-circle"></i> Create Task</a></li>
+        <li><a href="{{ url_for('worker_performance') }}"><i class="fas fa-chart-line"></i> Performance</a></li>
+        <li><a href="{{ url_for('notifications_supervisor') }}"><i class="fas fa-bell"></i> Notifications</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">SP</div>
+          <div class="user-details">
+            <span class="user-name">Supervisor</span>
+            <span class="user-role">Team Lead</span>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-    <script src="/static/supervisor/task_list.js"></script>
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="content-header">
+        <h1>All Tasks</h1>
+        <div class="filters">
+          <a href="{{ url_for('task_list') }}">All</a>
+          <a href="{{ url_for('task_list', status='pending') }}">Pending</a>
+          <a href="{{ url_for('task_list', status='in-progress') }}">In Progress</a>
+          <a href="{{ url_for('task_list', status='completed') }}">Completed</a>
+        </div>
+      </header>
+
+      <div class="content-body">
+        <table class="task-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Assignee</th>
+              <th>Status</th>
+              <th>Priority</th>
+              <th>Due Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for task in tasks %}
+            <tr>
+              <td>{{ task.id }}</td>
+              <td>{{ task.name }}</td>
+              <td>{{ task.assigned_worker.name if task.assigned_worker else 'Unassigned' }}</td>
+              <td><span class="status-badge {{ task.status|lower }}">{{ task.status|capitalize }}</span></td>
+              <td><span class="priority-badge {{ task.priority|lower }}">{{ task.priority|capitalize }}</span></td>
+              <td>{{ task.due_date.strftime('%Y-%m-%d') if task.due_date else '—' }}</td>
+              <td>
+                <a href="{{ url_for('supervisor_task_details', task_id=task.id) }}" 
+                   class="btn btn-sm btn-primary">
+                   View
+                </a>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7">No tasks found.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/supervisor/task_list.js"></script>
 </body>
 </html>

@@ -166,16 +166,164 @@ def init_routes(app):
             flash("No active session to end.", "warning")
 
         return redirect(url_for("task_details", task_id=task_id))
+    
+    # -----------------------------
+    # Supervisor - Dashboard
+    # -----------------------------
 
-    # -----------------------------
-    # Supervisor dashboard
-    # -----------------------------
     @app.route("/supervisor/dashboard")
     def supervisor_dashboard():
-        if not require_role("supervisor"):
+        if session.get("role") != "supervisor":
             flash("Unauthorized access.", "danger")
             return redirect(url_for("login"))
-        return render_template("supervisor_dashboard.html")
+
+        # Example: fetch some stats
+        total_tasks = Task.query.count()
+        pending_tasks = Task.query.filter_by(status="pending").count()
+        completed_tasks = Task.query.filter_by(status="completed").count()
+
+        return render_template(
+            "/supervisor/supervisor_dashboard.html",
+            total_tasks=total_tasks,
+            pending_tasks=pending_tasks,
+            completed_tasks=completed_tasks,
+        )
+
+    # -----------------------------
+    # Supervisor - Assign Task
+    # -----------------------------
+    @app.route("/supervisor/task_create", methods=["GET", "POST"])
+    def task_create():
+        if session.get("role") != "supervisor":
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        if request.method == "POST":
+            title = request.form.get("title")
+            description = request.form.get("description")
+            category = request.form.get("category")
+            priority = request.form.get("priority")
+            start_date = request.form.get("startDate")
+            due_date = request.form.get("dueDate")
+            estimated_hours = request.form.get("estimatedHours")
+            tags = request.form.get("tags")
+
+            new_task = Task(
+                name=title,
+                description=description,
+                category=category,
+                priority=priority,
+                created_by_supervisor_id=session.get("user_id"),
+                start_date=datetime.strptime(start_date, "%Y-%m-%d") if start_date else None,
+                due_date=datetime.strptime(due_date, "%Y-%m-%d") if due_date else None,
+                estimated_hours=int(estimated_hours) if estimated_hours else None,
+                tags=tags,
+                assigned_worker_id=None  # left empty for auto-assignment
+            )
+
+            db.session.add(new_task)
+            db.session.commit()
+            flash("Task created and queued for auto-assignment!", "success")
+            return redirect(url_for("supervisor_dashboard"))
+
+        return render_template("supervisor/task_create.html")
+
+
+
+    @app.route("/supervisor/task_list")
+    def task_list():
+        if session.get("role") != "supervisor":
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        status = request.args.get("status")
+        tasks = Task.query.filter_by(status=status).all() if status else Task.query.all()
+
+        return render_template("supervisor/task_list.html", tasks=tasks)
+
+
+    @app.route("/supervisor/task_details/<int:task_id>")
+    def supervisor_task_details(task_id):
+        if session.get("role") != "supervisor":
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        task = Task.query.get_or_404(task_id)
+        return render_template("supervisor/task_details.html", task=task)
+
+
+    # -----------------------------
+    # Supervisor: Worker Performance
+    # -----------------------------
+    @app.route("/supervisor/worker_performance")
+    def worker_performance():
+        if session.get("role") != "supervisor":
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        # --- Aggregate Metrics ---
+        total_tasks = Task.query.count()
+        completed_tasks = Task.query.filter_by(status="completed").count()
+        in_progress_tasks = Task.query.filter_by(status="in-progress").count()
+        pending_tasks = Task.query.filter_by(status="pending").count()
+
+        # Team performance score = % completed
+        team_score = round((completed_tasks / total_tasks) * 100, 2) if total_tasks else 0
+
+        # On-time completion (approximation: tasks with due_date >= today and status=completed)
+        today = datetime.utcnow().date()
+        on_time_tasks = Task.query.filter(
+            Task.status == "completed",
+            Task.due_date != None,
+            Task.due_date >= today
+        ).count()
+        on_time = round((on_time_tasks / completed_tasks) * 100, 2) if completed_tasks else 0
+
+        # Average estimated hours
+        avg_duration = db.session.query(db.func.avg(Task.estimated_hours)).scalar() or 0
+        avg_duration = round(avg_duration, 1)
+
+        # --- Worker Rankings ---
+        worker_rankings = []
+        workers = User.query.filter_by(role="worker").all()
+        for w in workers:
+            w_tasks = Task.query.filter_by(assigned_worker_id=w.id).all()
+            completed = sum(1 for t in w_tasks if t.status == "completed")
+            in_progress = sum(1 for t in w_tasks if t.status == "in-progress")
+            pending = sum(1 for t in w_tasks if t.status == "pending")
+
+            # Simple score formula: completed tasks + in-progress weight
+            score = round((completed * 1.0) + (in_progress * 0.5), 2)
+
+            worker_rankings.append({
+                "name": w.name,
+                "role": w.role,
+                "tasks_completed": completed,
+                "in_progress": in_progress,
+                "pending": pending,
+                "score": score
+            })
+
+        # Sort by score
+        worker_rankings.sort(key=lambda x: x["score"], reverse=True)
+
+        return render_template(
+            "supervisor/worker_performance.html",
+            team_score=team_score,
+            on_time=on_time,
+            avg_duration=avg_duration,
+            total_tasks=total_tasks,
+            completed_tasks=completed_tasks,
+            in_progress_tasks=in_progress_tasks,
+            pending_tasks=pending_tasks,
+            worker_rankings=worker_rankings
+        )
+
+
+    @app.route("/supervisor/notifications_supervisor")
+    def notifications_supervisor():
+        return render_template("/supervisor/notifications_supervisor.html")
+
 
     # -----------------------------
     # HR dashboard

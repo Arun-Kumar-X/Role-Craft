@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worker Dashboard</title>
+  <link rel="stylesheet" href="worker_dashboard.css">
+</head>
+<body>
+  <!-- Background canvas for particle animation -->
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="dashboard-container">
+    <!-- Welcome Section -->
+    <div class="welcome">
+      <h1>Welcome, <span id="worker-name">John Doe</span>!</h1>
+      <p>Here's your daily overview</p>
+    </div>
+
+    <!-- Notifications -->
+    <div class="notifications">
+      <h2>Notifications</h2>
+      <ul>
+        <li>New task assigned: Update Inventory</li>
+        <li>Training suggested: Advanced Safety Protocols</li>
+      </ul>
+    </div>
+
+    <!-- Task List -->
+    <div class="tasks">
+      <h2>Your Tasks</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Deadline</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Inventory Check</td>
+            <td><span class="status pending">Pending</span></td>
+            <td>2025-10-18</td>
+            <td><button class="task-btn start">Start</button></td>
+          </tr>
+          <tr>
+            <td>Equipment Maintenance</td>
+            <td><span class="status in-progress">In Progress</span></td>
+            <td>2025-10-20</td>
+            <td><button class="task-btn complete">Complete</button></td>
+          </tr>
+          <tr>
+            <td>Safety Audit</td>
+            <td><span class="status completed">Completed</span></td>
+            <td>2025-10-15</td>
+            <td><button class="task-btn disabled" disabled>Done</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Links -->
+    <div class="links">
+      <a href="skill_profile.html" class="link-btn">Skill Profile</a>
+      <a href="training.html" class="link-btn">Training Page</a>
+    </div>
+  </div>
+
+  <script>
+    // Particle Background Animation
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+    const numParticles = 120;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const mouse = { x: null, y: null };
+    window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
+
+    class Particle {
+      constructor(x, y, size, color, speedX, speedY) {
+        this.x = x; this.y = y;
+        this.size = size; this.color = color;
+        this.speedX = speedX; this.speedY = speedY;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+
+        const dx = mouse.x - this.x;
+        const dy = mouse.y - this.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) { this.x -= dx/25; this.y -= dy/25; }
+        this.draw();
+      }
+    }
+
+    function initParticles() {
+      particlesArray = [];
+      const colors = ["#FFF2F2","#A9B5DF","#7886C7","#2D336B"];
+      for (let i=0; i<numParticles; i++) {
+        const size = Math.random()*3+1;
+        const x = Math.random()*canvas.width;
+        const y = Math.random()*canvas.height;
+        const speedX = (Math.random()-0.5)*0.8;
+        const speedY = (Math.random()-0.5)*0.8;
+        const color = colors[Math.floor(Math.random()*colors.length)];
+        particlesArray.push(new Particle(x,y,size,color,speedX,speedY));
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      particlesArray.forEach(p => p.update());
+      requestAnimationFrame(animateParticles);
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initParticles();
+    });
+
+    initParticles();
+    animateParticles();
+  </script>
+</body>
+</html>

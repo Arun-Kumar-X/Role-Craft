@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Task - Role-Craft</title>
+    <link rel="stylesheet" href="task_assign.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <!-- Same sidebar as task_list.html -->
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="..\static\assests\logo.png" alt="Role-Craft" onerror="this.style.display='none'">
+                    <span>Supervisor</span>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="supervisor_dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="task_list.html"><i class="fas fa-tasks"></i> All Tasks</a></li>
+                <li class="active"><a href="task_assign.html"><i class="fas fa-plus-circle"></i> Assign Task</a></li>
+                <li><a href="task_review.html"><i class="fas fa-check-double"></i> Review Tasks</a></li>
+                <li><a href="worker_performance.html"><i class="fas fa-chart-line"></i> Performance</a></li>
+                <li><a href="notifications_supervisor.html"><i class="fas fa-bell"></i> Notifications</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">SP</div>
+                    <div class="user-details">
+                        <span class="user-name">Supervisor</span>
+                        <span class="user-role">Team Lead</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Assign New Task</h1>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" id="saveDraft">
+                        <i class="fas fa-save"></i> Save Draft
+                    </button>
+                    <button class="btn btn-primary" id="previewTask">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <form id="taskAssignForm" class="task-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-info-circle"></i> Task Information</h3>
+                        <div class="form-group">
+                            <label for="taskTitle">Task Title *</label>
+                            <input type="text" id="taskTitle" name="title" required placeholder="Enter task title">
+                        </div>
+                        <div class="form-group">
+                            <label for="taskDescription">Description *</label>
+                            <textarea id="taskDescription" name="description" required rows="4" placeholder="Describe the task in detail"></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskCategory">Category</label>
+                                <select id="taskCategory" name="category">
+                                    <option value="development">Development</option>
+                                    <option value="design">Design</option>
+                                    <option value="testing">Testing</option>
+                                    <option value="documentation">Documentation</option>
+                                    <option value="operations">Operations</option>
+                                    <option value="support">Support</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="taskPriority">Priority *</label>
+                                <select id="taskPriority" name="priority" required>
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-user-friends"></i> Assignment & Timeline</h3>
+                        <div class="form-group">
+                            <label for="taskAssignee">Assign To *</label>
+                            <div class="assignee-selector">
+                                <select id="taskAssignee" name="assignee" required>
+                                    <option value="">Select team member</option>
+                                    <option value="john">John Doe (Developer)</option>
+                                    <option value="sarah">Sarah Wilson (Designer)</option>
+                                    <option value="mike">Mike Johnson (Tester)</option>
+                                    <option value="emma">Emma Davis (Operations)</option>
+                                    <option value="david">David Brown (Support)</option>
+                                </select>
+                                <div class="assignee-preview" id="assigneePreview">
+                                    <i class="fas fa-user"></i>
+                                    <span>Select a team member to see their workload</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="taskStartDate">Start Date *</label>
+                                <input type="date" id="taskStartDate" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="taskDueDate">Due Date *</label>
+                                <input type="date" id="taskDueDate" name="dueDate" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskEstimatedHours">Estimated Hours</label>
+                            <input type="number" id="taskEstimatedHours" name="estimatedHours" min="1" max="100" placeholder="e.g., 8">
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3><i class="fas fa-paperclip"></i> Additional Information</h3>
+                        <div class="form-group">
+                            <label for="taskTags">Tags</label>
+                            <div class="tags-input">
+                                <input type="text" id="taskTags" placeholder="Add tags (press Enter)">
+                                <div class="tags-container" id="tagsContainer"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskAttachments">Attachments</label>
+                            <div class="file-upload">
+                                <input type="file" id="taskAttachments" multiple style="display: none;">
+                                <button type="button" class="btn-upload" id="uploadBtn">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Choose Files
+                                </button>
+                                <span class="file-info" id="fileInfo">No files selected</span>
+                            </div>
+                            <div class="attachments-list" id="attachmentsList"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="resetForm">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Assign Task
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Preview Modal -->
+    <div class="modal" id="previewModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Task Preview</h3>
+                <button class="close-btn" id="closePreview">&times;</button>
+            </div>
+            <div class="modal-body" id="previewContent">
+                <!-- Preview content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="task_assign.js"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Tasks - Role-Craft</title>
+    <link rel="stylesheet" href="task_review.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="..\static\assests\logo.png" alt="Role-Craft" onerror="this.style.display='none'">
+                    <span>Supervisor</span>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="supervisor_dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="task_list.html"><i class="fas fa-tasks"></i> All Tasks</a></li>
+                <li><a href="task_assign.html"><i class="fas fa-plus-circle"></i> Assign Task</a></li>
+                <li class="active"><a href="task_review.html"><i class="fas fa-check-double"></i> Review Tasks</a></li>
+                <li><a href="worker_performance.html"><i class="fas fa-chart-line"></i> Performance</a></li>
+                <li><a href="notifications_supervisor.html"><i class="fas fa-bell"></i> Notifications</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">SP</div>
+                    <div class="user-details">
+                        <span class="user-name">Supervisor</span>
+                        <span class="user-role">Team Lead</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Task Review & Approval</h1>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search tasks...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <select id="reviewFilter">
+                        <option value="all">All Tasks</option>
+                        <option value="pending">Pending Review</option>
+                        <option value="approved">Approved</option>
+                        <option value="revisions">Needs Revision</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <div class="review-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pendingReviews">0</h3>
+                            <p>Pending Review</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon approved">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="approvedTasks">0</h3>
+                            <p>Approved This Week</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon revisions">
+                            <i class="fas fa-redo"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="revisionTasks">0</h3>
+                            <p>Need Revision</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon average">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="avgReviewTime">0h</h3>
+                            <p>Avg. Review Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-tabs">
+                    <button class="tab-btn active" data-tab="pending">Pending Review</button>
+                    <button class="tab-btn" data-tab="approved">Approved</button>
+                    <button class="tab-btn" data-tab="revisions">Needs Revision</button>
+                </div>
+
+                <div class="tasks-container">
+                    <div class="tasks-list" id="tasksList">
+                        <!-- Tasks will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Task Review</h3>
+                <button class="close-btn" id="closeReview">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="task-details" id="taskDetails">
+                    <!-- Task details will be loaded here -->
+                </div>
+                <div class="review-form" id="reviewForm">
+                    <!-- Review form will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="task_review.js"></script>
+</body>
+</html>

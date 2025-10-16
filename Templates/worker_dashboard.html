@@ -1,92 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Worker Dashboard</title>
-<link rel="stylesheet" href="worker_dashboard.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Worker Dashboard - Role-Craft</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #A9B5DF 0%, #7886C7 100%);
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    #bgAnimation {
+      position: fixed;
+      top:0; left:0; width:100%; height:100%;
+      z-index: 0;
+      pointer-events:none;
+    }
+
+    .container {
+      max-width: 1100px;
+      width: 100%;
+      background: #FFF2F2;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(45, 51, 107, 0.3);
+      overflow: hidden;
+      animation: slideUp 0.6s ease-out;
+      padding: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to {opacity:1; transform:translateY(0);} }
+
+    .header {
+      color: #FFF2F2;
+      padding: 30px 40px;
+      background: linear-gradient(135deg, #2D336B 0%, #7886C7 100%);
+      border-radius: 16px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .header .welcome {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #2D336B;
+      margin-bottom: 15px;
+    }
+
+    .tasks-container, .notifications-container, .machinery-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .task-card, .notification-card, .machine-card {
+      background:white;
+      border-radius: 16px;
+      padding: 20px;
+      flex:1 1 300px;
+      box-shadow: 0 2px 8px rgba(45,51,107,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .task-card:hover, .notification-card:hover, .machine-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(45,51,107,0.15);
+    }
+
+    .task-card h3, .notification-card h3, .machine-card h3 { font-size: 16px; font-weight:600; color:#2D336B; margin-bottom:8px;}
+    .task-card p, .notification-card p, .machine-card p { font-size: 14px; color:#2D336B; line-height:1.5; }
+
+    .status-badge {
+      display:inline-block;
+      padding:6px 14px;
+      border-radius:20px;
+      font-size:12px;
+      font-weight:600;
+      color:#2D336B;
+      background:#A9B5DF;
+    }
+    .status-badge.in-progress { background:#7886C7; color:#FFF2F2; }
+    .status-badge.completed { background:#4CAF50; color:#FFF; }
+    .status-badge.pending { background:#E91E63; color:#FFF; }
+
+    .btn { padding:10px 20px; border:none; border-radius:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all 0.3s;}
+    .btn-primary { background:linear-gradient(135deg, #7886C7 0%, #2D336B 100%); color:#FFF2F2; }
+    .btn-success { background:linear-gradient(135deg, #4CAF50 0%, #388E3C 100%); color:white; }
+    .btn-secondary { background:#A9B5DF; color:#2D336B; }
+    .btn:hover { transform: translateY(-2px); }
+
+    .machine-card img { width:100%; height:150px; border-radius:12px; object-fit:cover; margin-bottom:10px; }
+
+    @media (max-width:768px){
+      .tasks-container,.notifications-container,.machinery-container { flex-direction:column; }
+    }
+  </style>
 </head>
 <body>
-
-<canvas id="bgCanvas"></canvas>
-
-<div class="dashboard-container">
-
-  <!-- Header -->
-  <div class="dashboard-header">
-    <img src="assests\worker-avatar.jpeg" alt="Worker Avatar" class="avatar">
-    <div class="header-text">
-      <h1>Welcome, <span id="worker-name">Worker</span>!</h1>
-      <p>Here’s your daily overview</p>
-    </div>
+<canvas id="bgAnimation"></canvas>
+<div class="container">
+  <div class="header">
+    <h1>Welcome, <span id="workerName">John Doe</span></h1>
+    <div class="welcome">Here is your task overview and machinery details</div>
   </div>
 
-  <!-- Quick Stats -->
-  <div class="stats">
-    <div class="stat-box">
-      <img src="assets/tasks-icon.png" class="stat-icon">
-      <h2 id="total-tasks">0</h2>
-      <p>Total Tasks</p>
-    </div>
-    <div class="stat-box">
-      <img src="assets/pending-icon.png" class="stat-icon">
-      <h2 id="pending-tasks">0</h2>
-      <p>Pending</p>
-    </div>
-    <div class="stat-box">
-      <img src="assets/inprogress-icon.png" class="stat-icon">
-      <h2 id="inprogress-tasks">0</h2>
-      <p>In Progress</p>
-    </div>
-    <div class="stat-box">
-      <img src="assets/completed-icon.png" class="stat-icon">
-      <h2 id="completed-tasks">0</h2>
-      <p>Completed</p>
-    </div>
+  <!-- Tasks -->
+  <div class="section-title">Assigned Tasks</div>
+  <div class="tasks-container" id="tasksContainer">
+    <!-- Dynamic task cards inserted here -->
   </div>
 
   <!-- Notifications -->
-  <div class="notifications">
-    <h2>Notifications <img src="assets/notification-icon.png" class="section-icon"></h2>
-    <ul id="notifications-list"></ul>
+  <div class="section-title">Notifications</div>
+  <div class="notifications-container" id="notificationsContainer">
+    <!-- Dynamic notifications -->
   </div>
 
-  <!-- Tasks Table -->
-  <div class="tasks">
-    <h2>Your Tasks <img src="assets/tasks-icon.png" class="section-icon"></h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Task</th>
-          <th>Status</th>
-          <th>Priority</th>
-          <th>Machine</th>
-          <th>Deadline</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="tasks-table"></tbody>
-    </table>
-  </div>
-
-  <!-- Machinery Assigned -->
-  <div class="machinery">
-    <h2>Assigned Machines <img src="assets/machine-icon.png" class="section-icon"></h2>
-    <div class="machine-cards" id="machinery-table"></div>
-  </div>
-
-  <!-- Links -->
-  <div class="links">
-    <a href="skill_profile.html" class="link-btn">
-      <img src="assets/skill-icon.png" class="link-icon"> Skill Profile
-    </a>
-    <a href="training.html" class="link-btn">
-      <img src="assets/training-icon.png" class="link-icon"> Training Page
-    </a>
+  <!-- Machinery -->
+  <div class="section-title">Machinery Overview</div>
+  <div class="machinery-container" id="machineryContainer">
+    <!-- Machinery cards -->
   </div>
 </div>
 
-<!-- JS for Particle Background and Data Fetching -->
-<script src="worker_dashboard.js"></script>
+<script>
+  // ==== Particle background (same as previous code) ====
+  const canvas = document.getElementById("bgAnimation");
+  const ctx = canvas.getContext("2d");
+  let particlesArray = [];
+  const numParticles = 90;
+
+  function resizeCanvas() { canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+  const mouse={x:null,y:null};
+  window.addEventListener("mousemove", e=>{mouse.x=e.x; mouse.y=e.y;});
+
+  class Particle {
+    constructor(x,y,size,color,speedX,speedY){Object.assign(this,{x,y,size,color,speedX,speedY}); this.alpha=Math.random()*0.6+0.2;}
+    update(){
+      this.x+=this.speedX; this.y+=this.speedY;
+      if(this.x<0||this.x>canvas.width)this.speedX*=-1;
+      if(this.y<0||this.y>canvas.height)this.speedY*=-1;
+      const dx=mouse.x-this.x, dy=mouse.y-this.y, dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<150){ this.x-=dx/20; this.y-=dy/20; }
+    }
+    draw(){
+      const gradient=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.size*3);
+      gradient.addColorStop(0,this.color); gradient.addColorStop(1,"rgba(255,255,255,0)");
+      ctx.fillStyle=gradient; ctx.beginPath(); ctx.arc(this.x,this.y,this.size*2,0,Math.PI*2); ctx.fill();
+    }
+  }
+  function init(){ particlesArray=[]; for(let i=0;i<numParticles;i++){ const size=Math.random()*2+1; const x=Math.random()*canvas.width; const y=Math.random()*canvas.height; const speedX=(Math.random()-0.5)*0.7; const speedY=(Math.random()-0.5)*0.7; const colors=["#FFF2F2","#A9B5DF","#7886C7","#2D336B"]; const color=colors[Math.floor(Math.random()*colors.length)]; particlesArray.push(new Particle(x,y,size,color,speedX,speedY)); } }
+  function connectParticles(){for(let a=0;a<particlesArray.length;a++){for(let b=a;b<particlesArray.length;b++){const dx=particlesArray[a].x-particlesArray[b].x, dy=particlesArray[a].y-particlesArray[b].y, dist=Math.sqrt(dx*dx+dy*dy);if(dist<130){ctx.strokeStyle="rgba(45, 51, 107, 0.1)";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(particlesArray[a].x,particlesArray[a].y);ctx.lineTo(particlesArray[b].x,particlesArray[b].y);ctx.stroke();}}}}
+  function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);particlesArray.forEach(p=>{p.update();p.draw();});connectParticles();requestAnimationFrame(animate);}
+  init(); animate();
+
+  // ==== Dummy dynamic content ====
+  const workerData = {
+    name:"John Doe",
+    tasks:[
+      {title:"Inspect Conveyor Belt", status:"Pending", deadline:"Oct 20, 2025"},
+      {title:"Lubricate Gearbox", status:"In Progress", deadline:"Oct 18, 2025"},
+      {title:"Safety Training", status:"Completed", deadline:"Oct 15, 2025"}
+    ],
+    notifications:[
+      "New task assigned: Inspect Conveyor Belt",
+      "Training suggested: Safety Module 1"
+    ],
+    machinery:[
+      {name:"Conveyor-1", condition:"Good", nextMaintenance:"Nov 01, 2025", img:"machine1.png"},
+      {name:"Gearbox-3", condition:"Average", nextMaintenance:"Nov 10, 2025", img:"machine2.png"}
+    ]
+  };
+
+  document.getElementById('workerName').textContent = workerData.name;
+
+  const tasksContainer = document.getElementById('tasksContainer');
+  workerData.tasks.forEach(task=>{
+    const card = document.createElement('div'); card.className='task-card';
+    card.innerHTML = `<h3>${task.title}</h3><p>Status: <span class="status-badge ${task.status.toLowerCase().replace(" ","-")}">${task.status}</span></p><p>Deadline: ${task.deadline}</p>`;
+    tasksContainer.appendChild(card);
+  });
+
+  const notificationsContainer = document.getElementById('notificationsContainer');
+  workerData.notifications.forEach(note=>{
+    const card = document.createElement('div'); card.className='notification-card';
+    card.innerHTML = `<h3><i class="fas fa-bell"></i> Notification</h3><p>${note}</p>`;
+    notificationsContainer.appendChild(card);
+  });
+
+  const machineryContainer = document.getElementById('machineryContainer');
+  workerData.machinery.forEach(machine=>{
+    const card = document.createElement('div'); card.className='machine-card';
+    card.innerHTML = `<img src="${machine.img}" alt="${machine.name}"><h3>${machine.name}</h3><p>Condition: ${machine.condition}</p><p>Next Maintenance: ${machine.nextMaintenance}</p>`;
+    machineryContainer.appendChild(card);
+  });
+</script>
 </body>
 </html>

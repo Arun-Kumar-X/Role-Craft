@@ -1,75 +1,178 @@
 from flask import render_template, request, redirect, url_for, session, flash
-from applications.database import db
-from applications.models import User
-from werkzeug.security import check_password_hash
+from application.database import db
+from application.models import User, Task, MachineLog
+from werkzeug.security import check_password_hash, generate_password_hash
 
-# -----------------------------
-# Initialize Routes
-# -----------------------------
 def init_routes(app):
 
     # -----------------------------
-    # Login Route
+    # Login (GET: form, POST: authenticate)
     # -----------------------------
     @app.route("/", methods=["GET", "POST"])
     @app.route("/login", methods=["GET", "POST"])
     def login():
         if request.method == "POST":
-            email = request.form.get("email")
-            password = request.form.get("password")
+            emp_id = request.form.get("emp_id", "").strip()
+            password = request.form.get("password", "")
+            role = request.form.get("role", "").strip().lower()
 
-            # Find user by email
-            user = User.query.filter_by(email=email).first()
+            if not emp_id or not password or not role:
+                flash("All fields are required.", "warning")
+                return redirect(url_for("login"))
 
-            if user and check_password_hash(user.password, password):
-                # Store user info in session
-                session["user_id"] = user.id
-                session["role"] = user.role
+            user = User.query.filter_by(emp_id=emp_id, role=role).first()
 
-                flash("Login successful!", "success")
+            if not user:
+                flash("User not found for given Employee ID and Role.", "danger")
+                return redirect(url_for("login"))
 
-                # Redirect based on role
-                if user.role == "worker":
-                    return redirect(url_for("worker_dashboard"))
-                elif user.role == "supervisor":
-                    return redirect(url_for("supervisor_dashboard"))
-                elif user.role == "hr":
-                    return redirect(url_for("hr_dashboard"))
-                else:
-                    flash("Unknown role!", "danger")
-                    return redirect(url_for("login"))
+            if not check_password_hash(user.password, password):
+                flash("Invalid password.", "danger")
+                return redirect(url_for("login"))
+
+            # Auth success
+            session.clear()
+            session["user_id"] = user.id
+            session["emp_id"] = user.emp_id
+            session["role"] = user.role
+
+            flash("Login successful.", "success")
+
+            if user.role == "worker":
+                return redirect(url_for("worker_dashboard"))
+            elif user.role == "supervisor":
+                return redirect(url_for("supervisor_dashboard"))
+            elif user.role == "hr":
+                return redirect(url_for("hr_dashboard"))
             else:
-                flash("Invalid credentials", "danger")
+                flash("Unknown role.", "danger")
                 return redirect(url_for("login"))
 
         return render_template("login.html")
 
     # -----------------------------
-    # Worker Dashboard
+    # Role guard helper
+    # -----------------------------
+    def require_role(expected):
+        return session.get("role") == expected
+
+    # -----------------------------
+    # Worker dashboard
     # -----------------------------
     @app.route("/worker/dashboard")
     def worker_dashboard():
-        if session.get("role") != "worker":
-            flash("Unauthorized access", "danger")
+        if not require_role("worker"):
+            flash("Unauthorized access.", "danger")
             return redirect(url_for("login"))
-        return render_template("worker_dashboard.html")
+
+        worker_id = session.get("user_id")
+        worker = User.query.get(worker_id)
+
+        tasks = Task.query.filter_by(assigned_worker_id=worker_id).all()
+        machine_logs = MachineLog.query.filter_by(worker_id=worker_id) \
+                                       .order_by(MachineLog.timestamp_start.desc()) \
+                                       .limit(5).all()
+
+        # Example notifications (could be generated dynamically)
+        notifications = [f"You have {len(tasks)} assigned tasks."]
+
+        return render_template("worker_dashboard.html",
+                               worker=worker,
+                               tasks=tasks,
+                               machine_logs=machine_logs,
+                               notifications=notifications)
 
     # -----------------------------
-    # Supervisor Dashboard
+    # Worker: Update Task Status
+    # -----------------------------
+    @app.route("/worker/task/<int:task_id>/update", methods=["POST"])
+    def update_task_status(task_id):
+        if not require_role("worker"):
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        task = Task.query.get(task_id)
+        if not task or task.assigned_worker_id != session.get("user_id"):
+            flash("Task not found or not assigned to you.", "danger")
+            return redirect(url_for("worker_dashboard"))
+
+        new_status = request.form.get("status")
+        if new_status in ["pending", "in-progress", "completed"]:
+            task.status = new_status
+            db.session.commit()
+            flash("Task status updated.", "success")
+        else:
+            flash("Invalid status.", "danger")
+
+        return redirect(url_for("worker_dashboard"))
+
+    # -----------------------------
+    # Supervisor dashboard
     # -----------------------------
     @app.route("/supervisor/dashboard")
     def supervisor_dashboard():
-        if session.get("role") != "supervisor":
-            flash("Unauthorized access", "danger")
+        if not require_role("supervisor"):
+            flash("Unauthorized access.", "danger")
             return redirect(url_for("login"))
         return render_template("supervisor_dashboard.html")
 
     # -----------------------------
-    # HR Dashboard
+    # HR dashboard
     # -----------------------------
     @app.route("/hr/dashboard")
     def hr_dashboard():
-        if session.get("role") != "hr":
-            flash("Unauthorized access", "danger")
+        if not require_role("hr"):
+            flash("Unauthorized access.", "danger")
             return redirect(url_for("login"))
-        return render_template("reports.html")
+        return render_template("hr_dashboard.html")
+
+    # -----------------------------
+    # HR: Add Employee
+    # -----------------------------
+    @app.route("/hr/add_employee", methods=["GET", "POST"])
+    def add_employee():
+        if not require_role("hr"):
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        if request.method == "POST":
+            fullname = request.form.get("fullname")
+            emp_id = request.form.get("employee_id")
+            email = request.form.get("email")
+            password = request.form.get("password")
+            confirm_password = request.form.get("confirm_password")
+            role = request.form.get("role")
+
+            if password != confirm_password:
+                flash("Passwords do not match.", "danger")
+                return redirect(url_for("add_employee"))
+
+            existing = User.query.filter(
+                (User.emp_id == emp_id) | (User.email == email)
+            ).first()
+            if existing:
+                flash("Employee ID or Email already exists.", "danger")
+                return redirect(url_for("add_employee"))
+
+            hashed_pw = generate_password_hash(password)
+            new_user = User(emp_id=emp_id,
+                            name=fullname,
+                            email=email,
+                            password=hashed_pw,
+                            role=role)
+            db.session.add(new_user)
+            db.session.commit()
+
+            flash("Employee added successfully!", "success")
+            return redirect(url_for("hr_dashboard"))
+
+        return render_template("add_employee.html")
+
+    # -----------------------------
+    # Logout
+    # -----------------------------
+    @app.route("/logout")
+    def logout():
+        session.clear()
+        flash("Logged out.", "info")
+        return redirect(url_for("login"))

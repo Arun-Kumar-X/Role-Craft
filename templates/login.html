@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Page</title>
-  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="static/login.css" />
   <style>
     /* Canvas for animated background */
     canvas#bgAnimation {
@@ -23,9 +23,9 @@
 
   <div class="container">
     <h2>Login</h2>
-    <form action="#" method="post">
+    <form action="{{ url_for('login') }}" method="post">
       <div class="input-box">
-        <input type="text" name="Employee ID" placeholder="Employee ID" required />
+        <input type="text" name="emp_id" placeholder="Employee ID" required />
       </div>
       <div class="input-box">
         <input type="password" name="password" placeholder="Password" required />

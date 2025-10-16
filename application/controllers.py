@@ -87,13 +87,13 @@ def init_routes(app):
     # -----------------------------
     @app.route("/worker/task/<int:task_id>/update", methods=["POST"])
     def update_task_status(task_id):
-        if not require_role("worker"):
+        if session.get("role") != "worker": 
             flash("Unauthorized access.", "danger")
             return redirect(url_for("login"))
 
-        task = Task.query.get(task_id)
-        if not task or task.assigned_worker_id != session.get("user_id"):
-            flash("Task not found or not assigned to you.", "danger")
+        task = Task.query.get_or_404(task_id)
+        if task.assigned_worker_id != session.get("user_id"):
+            flash("This task is not assigned to you.", "danger")
             return redirect(url_for("worker_dashboard"))
 
         new_status = request.form.get("status")
@@ -104,7 +104,7 @@ def init_routes(app):
         else:
             flash("Invalid status.", "danger")
 
-        return redirect(url_for("worker_dashboard"))
+        return redirect(url_for("task_details", task_id=task_id))
 
     # -----------------------------
     # Supervisor dashboard
@@ -131,9 +131,9 @@ def init_routes(app):
     # -----------------------------
     @app.route("/hr/add_employee", methods=["GET", "POST"])
     def add_employee():
-        if not require_role("hr"):
-            flash("Unauthorized access.", "danger")
-            return redirect(url_for("login"))
+        # if not require_role("hr"):
+        #     flash("Unauthorized access.", "danger")
+        #     return redirect(url_for("login"))
 
         if request.method == "POST":
             fullname = request.form.get("fullname")

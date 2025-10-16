@@ -1,7 +1,9 @@
 from application.database import db
 from datetime import datetime
 
+# -----------------------------
 # User Table
+# -----------------------------
 class User(db.Model):
     __tablename__ = "users"
 
@@ -16,12 +18,15 @@ class User(db.Model):
     tasks = db.relationship("Task", back_populates="assigned_worker", foreign_keys="Task.assigned_worker_id")
     assessments = db.relationship("Assessment", back_populates="worker", cascade="all, delete-orphan")
     machine_logs = db.relationship("MachineLog", back_populates="worker", cascade="all, delete-orphan")
+    work_sessions = db.relationship("WorkSession", back_populates="worker", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User {self.emp_id} - {self.name} ({self.role})>"
 
 
+# -----------------------------
 # Task Table
+# -----------------------------
 class Task(db.Model):
     __tablename__ = "tasks"
 
@@ -35,12 +40,15 @@ class Task(db.Model):
 
     # Relationships
     assigned_worker = db.relationship("User", back_populates="tasks", foreign_keys=[assigned_worker_id])
+    work_sessions = db.relationship("WorkSession", back_populates="task", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Task {self.name} status={self.status}>"
 
 
+# -----------------------------
 # Assessment Table
+# -----------------------------
 class Assessment(db.Model):
     __tablename__ = "assessments"
 
@@ -59,7 +67,9 @@ class Assessment(db.Model):
         return f"<Assessment worker={self.worker_id} task={self.task_id} score={self.score}>"
 
 
+# -----------------------------
 # MachineLog Table
+# -----------------------------
 class MachineLog(db.Model):
     __tablename__ = "machine_logs"
 
@@ -78,3 +88,23 @@ class MachineLog(db.Model):
 
     def __repr__(self):
         return f"<MachineLog worker={self.worker_id} machine={self.machine_name} start={self.timestamp_start}>"
+
+
+# -----------------------------
+# WorkSession Table
+# -----------------------------
+class WorkSession(db.Model):
+    __tablename__ = "work_sessions"
+
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, db.ForeignKey("tasks.id"), nullable=False)
+    worker_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    start_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    end_time = db.Column(db.DateTime, nullable=True)
+
+    # Relationships
+    task = db.relationship("Task", back_populates="work_sessions")
+    worker = db.relationship("User", back_populates="work_sessions")
+
+    def __repr__(self):
+        return f"<WorkSession {self.id} Task:{self.task_id} Worker:{self.worker_id}>"

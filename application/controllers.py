@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, url_for, session, flash
 from application.database import db
-from application.models import User, Task, MachineLog
+from application.models import User, Task, MachineLog, WorkSession
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
 
 def init_routes(app):
 
@@ -57,41 +58,70 @@ def init_routes(app):
         return session.get("role") == expected
 
     # -----------------------------
-    # Worker dashboard
+    # Worker: Dashboard
     # -----------------------------
     @app.route("/worker/dashboard")
     def worker_dashboard():
-        if not require_role("worker"):
+        if session.get("role") != "worker":
             flash("Unauthorized access.", "danger")
             return redirect(url_for("login"))
 
         worker_id = session.get("user_id")
-        worker = User.query.get(worker_id)
+        worker = User.query.get_or_404(worker_id)
 
+        # Fetch tasks assigned to this worker
         tasks = Task.query.filter_by(assigned_worker_id=worker_id).all()
-        machine_logs = MachineLog.query.filter_by(worker_id=worker_id) \
-                                       .order_by(MachineLog.timestamp_start.desc()) \
-                                       .limit(5).all()
 
-        # Example notifications (could be generated dynamically)
-        notifications = [f"You have {len(tasks)} assigned tasks."]
+        # Example: notifications could be pulled from a Notification table,
+        # or just a placeholder list for now
+        notifications = []  
 
-        return render_template("worker_dashboard.html",
-                               worker=worker,
-                               tasks=tasks,
-                               machine_logs=machine_logs,
-                               notifications=notifications)
+        # Fetch recent machine logs for this worker
+        machine_logs = MachineLog.query.filter_by(worker_id=worker_id).order_by(
+            MachineLog.timestamp_start.desc()
+        ).limit(5).all()
 
+        return render_template(
+            "worker_dashboard.html",
+            worker=worker,
+            tasks=tasks,
+            notifications=notifications,
+            machine_logs=machine_logs
+        )
+    # -----------------------------
+    # Worker: Task Details
+    # -----------------------------
+    @app.route("/worker/task/<int:task_id>")
+    def task_details(task_id):
+        if session.get("role") != "worker":
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        task = Task.query.get_or_404(task_id)
+        supervisor = User.query.get(task.created_by_supervisor_id) if task.created_by_supervisor_id else None
+        worker = User.query.get(session.get("user_id"))
+
+        # Fetch all sessions for this task/worker
+        work_sessions = WorkSession.query.filter_by(task_id=task.id, worker_id=worker.id).all()
+
+        return render_template(
+            "task_details.html",
+            task=task,
+            supervisor=supervisor,
+            worker=worker,
+            work_sessions=work_sessions
+        )
     # -----------------------------
     # Worker: Update Task Status
     # -----------------------------
     @app.route("/worker/task/<int:task_id>/update", methods=["POST"])
     def update_task_status(task_id):
-        if session.get("role") != "worker": 
+        if session.get("role") != "worker":
             flash("Unauthorized access.", "danger")
             return redirect(url_for("login"))
 
         task = Task.query.get_or_404(task_id)
+
         if task.assigned_worker_id != session.get("user_id"):
             flash("This task is not assigned to you.", "danger")
             return redirect(url_for("worker_dashboard"))
@@ -103,6 +133,37 @@ def init_routes(app):
             flash("Task status updated.", "success")
         else:
             flash("Invalid status.", "danger")
+
+        return redirect(url_for("task_details", task_id=task_id))
+    
+    @app.route("/worker/task/<int:task_id>/start_session", methods=["POST"])
+    def start_session(task_id):
+        if session.get("role") != "worker":
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        worker_id = session.get("user_id")
+        new_session = WorkSession(task_id=task_id, worker_id=worker_id, start_time=datetime.utcnow())
+        db.session.add(new_session)
+        db.session.commit()
+        flash("Work session started.", "success")
+        return redirect(url_for("task_details", task_id=task_id))
+
+
+    @app.route("/worker/task/<int:task_id>/end_session", methods=["POST"])
+    def end_session(task_id):
+        if session.get("role") != "worker":
+            flash("Unauthorized access.", "danger")
+            return redirect(url_for("login"))
+
+        worker_id = session.get("user_id")
+        session_entry = WorkSession.query.filter_by(task_id=task_id, worker_id=worker_id, end_time=None).first()
+        if session_entry:
+            session_entry.end_time = datetime.utcnow()
+            db.session.commit()
+            flash("Work session ended.", "success")
+        else:
+            flash("No active session to end.", "warning")
 
         return redirect(url_for("task_details", task_id=task_id))
 

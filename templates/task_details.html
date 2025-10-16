@@ -6,7 +6,8 @@
   <title>Task Details - Role-Craft</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <link rel="stylesheet" href="/static/task_details.css"></head>
+  <link rel="stylesheet" href="/static/task_details.css" />
+</head>
 <body>
   <canvas id="bgAnimation"></canvas>
   <div class="container">
@@ -28,7 +29,7 @@
         <div class="task-meta">
           <div class="meta-item">
             <span class="status-badge {{ task.status|default('pending')|lower }}">
-              {{ task.status|default('Pending') }}
+              {{ task.status|capitalize }}
             </span>
           </div>
         </div>
@@ -65,14 +66,83 @@
       <!-- Action Buttons -->
       <div class="action-buttons">
         <form method="POST" action="{{ url_for('update_task_status', task_id=task.id) }}">
-          <button type="submit" name="status" value="in-progress" class="btn btn-primary">
-            <i class="fas fa-play"></i> Start Task
-          </button>
-          <button type="submit" name="status" value="completed" class="btn btn-success">
-            <i class="fas fa-check-circle"></i> Complete Task
+          {% if task.status|lower == "pending" %}
+            <button type="submit" name="status" value="in-progress" class="btn btn-primary">
+              <i class="fas fa-play"></i> Start Progress
+            </button>
+          {% elif task.status|lower == "in-progress" %}
+            <button type="submit" name="status" value="completed" class="btn btn-success">
+              <i class="fas fa-check-circle"></i> Complete Task
+            </button>
+          {% else %}
+            <button class="btn btn-secondary" disabled>
+              <i class="fas fa-check"></i> Completed
+            </button>
+          {% endif %}
+        </form>
+
+
+        <!-- Back to Dashboard -->
+        <form method="GET" action="{{ url_for('worker_dashboard') }}" style="display:inline; margin-left:10px;">
+          <button type="submit" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
           </button>
         </form>
       </div>
+
+      <!-- Work Session Monitor -->
+      {% if task.status|lower == "in-progress" %}
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-clock"></i> Work Sessions</h3>
+
+        <!-- Start / End buttons -->
+        <div class="session-buttons">
+          <form method="POST" action="{{ url_for('start_session', task_id=task.id) }}" style="display:inline;">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-play"></i> Start Work Session
+            </button>
+          </form>
+
+          <form method="POST" action="{{ url_for('end_session', task_id=task.id) }}" style="display:inline; margin-left:10px;">
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-stop"></i> End Work Session
+            </button>
+          </form>
+        </div>
+
+        <!-- Session history table -->
+        <table class="session-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+              <th>Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for session in work_sessions %}
+            <tr>
+              <td>{{ loop.index }}</td>
+              <td>{{ session.start_time }}</td>
+              <td>{{ session.end_time or "Ongoing" }}</td>
+              <td>
+                {% if session.end_time %}
+                  {{ (session.end_time - session.start_time) }}
+                {% else %}
+                  In progress...
+                {% endif %}
+              </td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4">No sessions recorded yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
     </div>
   </div>
 

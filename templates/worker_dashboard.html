@@ -1,206 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Worker Dashboard - Role-Craft</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * {margin: 0; padding: 0; box-sizing: border-box;}
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #A9B5DF 0%, #7886C7 100%);
-      min-height: 100vh;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      position: relative;
-      overflow-x: hidden;
-    }
-    #bgAnimation { position: fixed; top:0; left:0; width:100%; height:100%; z-index: 0; pointer-events:none; }
-    .container { max-width: 1100px; width: 100%; background: #FFF2F2; border-radius: 24px; box-shadow: 0 20px 60px rgba(45, 51, 107, 0.3); overflow: hidden; animation: slideUp 0.6s ease-out; padding: 30px; position: relative; z-index: 1; }
-    @keyframes slideUp { from { opacity:0; transform:translateY(30px); } to {opacity:1; transform:translateY(0);} }
-    .header { color: #FFF2F2; padding: 30px 40px; background: linear-gradient(135deg, #2D336B 0%, #7886C7 100%); border-radius: 16px; margin-bottom: 30px; position: relative; }
-    .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
-    .header .welcome { font-size: 16px; opacity: 0.9; }
-    .section-title { font-size: 20px; font-weight: 600; color: #2D336B; margin-bottom: 15px; }
-    .tasks-container, .notifications-container, .machinery-container { display: flex; flex-wrap: wrap; gap: 20px; }
-    .task-card, .notification-card, .machine-card { background:white; border-radius: 16px; padding: 20px; flex:1 1 300px; box-shadow: 0 2px 8px rgba(45,51,107,0.08); transition: transform 0.3s, box-shadow 0.3s; }
-    .task-card:hover, .notification-card:hover, .machine-card:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(45,51,107,0.15); }
-    .task-card h3, .notification-card h3, .machine-card h3 { font-size: 16px; font-weight:600; color:#2D336B; margin-bottom:8px;}
-    .task-card p, .notification-card p, .machine-card p { font-size: 14px; color:#2D336B; line-height:1.5; }
-    .status-badge { display:inline-block; padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; color:#2D336B; background:#A9B5DF; }
-    .status-badge.in-progress { background:#7886C7; color:#FFF2F2; }
-    .status-badge.completed { background:#4CAF50; color:#FFF; }
-    .status-badge.pending { background:#E91E63; color:#FFF; }
-    .btn { padding:8px 14px; border:none; border-radius:12px; font-weight:600; cursor:pointer; margin-top:8px; }
-    .btn-primary { background:linear-gradient(135deg, #7886C7 0%, #2D336B 100%); color:#FFF2F2; }
-    .btn-success { background:linear-gradient(135deg, #4CAF50 0%, #388E3C 100%); color:white; }
-    .btn-secondary { background:#A9B5DF; color:#2D336B; }
-    .machine-card img { width:100%; height:150px; border-radius:12px; object-fit:cover; margin-bottom:10px; }
-    @media (max-width:768px){ .tasks-container,.notifications-container,.machinery-container { flex-direction:column; } }
-  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Reference CSS from static folder -->
+  <link rel="stylesheet" href="/static/worker_dashboard.css">
 </head>
 <body>
-<canvas id="bgAnimation"></canvas>
-<div class="container">
-  <div class="header">
-    <h1>Welcome, {{ worker.name }}</h1>
-    <div class="welcome">Here is your task overview and machinery details</div>
-    <a href="{{ url_for('logout') }}" class="btn btn-secondary" style="position:absolute; top:20px; right:20px;">Logout</a>
-  </div>
+  <canvas id="bgAnimation"></canvas>
+  <div class="container">
+    <div class="header">
+      <h1>Welcome, {{ worker.name }}</h1>
+      <div class="welcome">Here is your task overview and machinery details</div>
+      <a href="{{ url_for('logout') }}" class="btn btn-secondary" style="position:absolute; top:20px; right:20px;">Logout</a>
+    </div>
 
-  <!-- Tasks -->
-  <div class="section-title">Assigned Tasks</div>
-  <div class="tasks-container">
-    {% for task in tasks %}
-      <div class="task-card">
-        <h3>{{ task.name }}</h3>
-        <p>Status: <span class="status-badge {{ task.status|lower }}">{{ task.status }}</span></p>
-        <p>{{ task.description }}</p>
-        <form method="POST" action="{{ url_for('update_task_status', task_id=task.id) }}">
-          <button type="submit" name="status" value="in-progress" class="btn btn-primary">Start</button>
-          <button type="submit" name="status" value="completed" class="btn btn-success">Complete</button>
-        </form>
-      </div>
-    {% else %}
-      <p>No tasks assigned yet.</p>
-    {% endfor %}
-  </div>
-
-  <!-- Notifications -->
-  <br>
-  <div class="section-title">Notifications</div>
-  <div class="notifications-container">
-    {% if notifications %}
-      {% for note in notifications %}
-        <div class="notification-card">
-          <h3><i class="fas fa-bell"></i> Notification</h3>
-          <p>{{ note }}</p>
+    <!-- Tasks -->
+    <div class="section-title">Assigned Tasks</div>
+    <div class="tasks-container">
+      {% for task in tasks %}
+        <div class="task-card">
+          <h3>{{ task.name }}</h3>
+          <p>Status: <span class="status-badge {{ task.status|lower }}">{{ task.status }}</span></p>
+          <p>{{ task.description }}</p>
+          <form method="POST" action="{{ url_for('update_task_status', task_id=task.id) }}">
+            <button type="submit" name="status" value="in-progress" class="btn btn-primary">View</button>
+            <button type="submit" name="status" value="completed" class="btn btn-success">Complete</button>
+          </form>
         </div>
+      {% else %}
+        <p>No tasks assigned yet.</p>
       {% endfor %}
-    {% else %}
-      <p>No notifications.</p>
-    {% endif %}
+    </div>
+
+    <!-- Notifications -->
+    <br>
+    <div class="section-title">Notifications</div>
+    <div class="notifications-container">
+      {% if notifications %}
+        {% for note in notifications %}
+          <div class="notification-card">
+            <h3><i class="fas fa-bell"></i> Notification</h3>
+            <p>{{ note }}</p>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p>No notifications.</p>
+      {% endif %}
+    </div>
+
+    <!-- Machinery -->
+    <br>
+    <div class="section-title">Recent Machine Logs</div>
+    <div class="machinery-container">
+      {% for log in machine_logs %}
+        <div class="machine-card">
+          <h3>{{ log.machine_name or "Machine" }}</h3>
+          <p>Inputs: {{ log.input_params }}</p>
+          <p>Output: {{ log.output_quality }}</p>
+          <p>Start: {{ log.timestamp_start }}</p>
+          <p>End: {{ log.timestamp_end or "Ongoing" }}</p>
+        </div>
+      {% else %}
+        <p>No machine logs yet.</p>
+      {% endfor %}
+    </div>
   </div>
 
-  <!-- Machinery -->
-  <br>
-  <div class="section-title">Recent Machine Logs</div>
-  <div class="machinery-container">
-    {% for log in machine_logs %}
-      <div class="machine-card">
-        <h3>{{ log.machine_name or "Machine" }}</h3>
-        <p>Inputs: {{ log.input_params }}</p>
-        <p>Output: {{ log.output_quality }}</p>
-        <p>Start: {{ log.timestamp_start }}</p>
-        <p>End: {{ log.timestamp_end or "Ongoing" }}</p>
-      </div>
-    {% else %}
-      <p>No machine logs yet.</p>
-    {% endfor %}
-  </div>
-</div>
-
-<script>
-  // Particle background
-  const canvas = document.getElementById("bgAnimation");
-  const ctx = canvas.getContext("2d");
-  let particlesArray = [];
-  const numParticles = 90;
-
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  }
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas();
-
-  const mouse = { x: null, y: null };
-  window.addEventListener("mousemove", e => {
-    mouse.x = e.x;
-    mouse.y = e.y;
-  });
-
-  class Particle {
-    constructor(x, y, size, color, speedX, speedY) {
-      Object.assign(this, { x, y, size, color, speedX, speedY });
-      this.alpha = Math.random() * 0.6 + 0.2;
-    }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-
-      const dx = mouse.x - this.x;
-      const dy = mouse.y - this.y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 150) {
-        this.x -= dx / 20;
-        this.y -= dy / 20;
-      }
-    }
-    draw() {
-      const gradient = ctx.createRadialGradient(
-        this.x, this.y, 0,
-        this.x, this.y, this.size * 3
-      );
-      gradient.addColorStop(0, this.color);
-      gradient.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.fillStyle = gradient;
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function init() {
-    particlesArray = [];
-    for (let i = 0; i < numParticles; i++) {
-      const size = Math.random() * 2 + 1;
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height;
-      const speedX = (Math.random() - 0.5) * 0.7;
-      const speedY = (Math.random() - 0.5) * 0.7;
-      const colors = ["#FFF2F2", "#A9B5DF", "#7886C7", "#2D336B"];
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      particlesArray.push(new Particle(x, y, size, color, speedX, speedY));
-    }
-  }
-
-  function connectParticles() {
-    for (let a = 0; a < particlesArray.length; a++) {
-      for (let b = a; b < particlesArray.length; b++) {
-        const dx = particlesArray[a].x - particlesArray[b].x;
-        const dy = particlesArray[a].y - particlesArray[b].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 130) {
-          ctx.strokeStyle = "rgba(45, 51, 107, 0.1)";
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-          ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-          ctx.stroke();
-        }
-      }
-    }
-  }
-
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particlesArray.forEach(p => {
-      p.update();
-      p.draw();
-    });
-    connectParticles();
-    requestAnimationFrame(animate);
-  }
-
-  init();
-  animate();
-</script>
+  <!-- Reference JS from static folder -->
+  <script src="/static/worker_dashboard.js"></script>
 </body>
 </html>

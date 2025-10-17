@@ -4,6 +4,7 @@ from application.models import User, Task, MachineLog, WorkSession
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 
+
 def init_routes(app):
 
     # -----------------------------
@@ -69,25 +70,22 @@ def init_routes(app):
         worker_id = session.get("user_id")
         worker = User.query.get_or_404(worker_id)
 
-        # Fetch tasks assigned to this worker
         tasks = Task.query.filter_by(assigned_worker_id=worker_id).all()
 
-        # Example: notifications could be pulled from a Notification table,
-        # or just a placeholder list for now
         notifications = []  
 
-        # Fetch recent machine logs for this worker
         machine_logs = MachineLog.query.filter_by(worker_id=worker_id).order_by(
             MachineLog.timestamp_start.desc()
         ).limit(5).all()
 
         return render_template(
-            "worker_dashboard.html",
+            "worker/worker_dashboard.html",  # ✅ relative path, no leading slash
             worker=worker,
             tasks=tasks,
             notifications=notifications,
             machine_logs=machine_logs
         )
+
     # -----------------------------
     # Worker: Task Details
     # -----------------------------
@@ -101,16 +99,16 @@ def init_routes(app):
         supervisor = User.query.get(task.created_by_supervisor_id) if task.created_by_supervisor_id else None
         worker = User.query.get(session.get("user_id"))
 
-        # Fetch all sessions for this task/worker
         work_sessions = WorkSession.query.filter_by(task_id=task.id, worker_id=worker.id).all()
 
         return render_template(
-            "task_details.html",
+            "worker/task_details.html",  # ✅ relative path
             task=task,
             supervisor=supervisor,
             worker=worker,
             work_sessions=work_sessions
         )
+
     # -----------------------------
     # Worker: Update Task Status
     # -----------------------------
@@ -134,8 +132,11 @@ def init_routes(app):
         else:
             flash("Invalid status.", "danger")
 
-        return redirect(url_for("task_details", task_id=task_id))
-    
+        return redirect(url_for("task_details", task_id=task_id))  # ✅ use function name
+
+    # -----------------------------
+    # Worker: Start Session
+    # -----------------------------
     @app.route("/worker/task/<int:task_id>/start_session", methods=["POST"])
     def start_session(task_id):
         if session.get("role") != "worker":
@@ -147,9 +148,11 @@ def init_routes(app):
         db.session.add(new_session)
         db.session.commit()
         flash("Work session started.", "success")
-        return redirect(url_for("task_details", task_id=task_id))
+        return redirect(url_for("task_details", task_id=task_id))  # ✅ corrected
 
-
+    # -----------------------------
+    # Worker: End Session
+    # -----------------------------
     @app.route("/worker/task/<int:task_id>/end_session", methods=["POST"])
     def end_session(task_id):
         if session.get("role") != "worker":
@@ -165,7 +168,8 @@ def init_routes(app):
         else:
             flash("No active session to end.", "warning")
 
-        return redirect(url_for("task_details", task_id=task_id))
+        return redirect(url_for("task_details", task_id=task_id))  # ✅ corrected
+
     
     # -----------------------------
     # Supervisor - Dashboard
@@ -324,26 +328,23 @@ def init_routes(app):
     def notifications_supervisor():
         return render_template("/supervisor/notifications_supervisor.html")
 
-
     # -----------------------------
-    # HR dashboard
+    # HR Dashboard
     # -----------------------------
+        
     @app.route("/hr/dashboard")
     def hr_dashboard():
-        if not require_role("hr"):
+        if session.get("role") != "hr":
             flash("Unauthorized access.", "danger")
             return redirect(url_for("login"))
-        return render_template("hr_dashboard.html")
+
+        return render_template("hr/hr_dashboard.html")
 
     # -----------------------------
-    # HR: Add Employee
+    # Signup (GET: form, POST: register new user)
     # -----------------------------
-    @app.route("/hr/add_employee", methods=["GET", "POST"])
-    def add_employee():
-        # if not require_role("hr"):
-        #     flash("Unauthorized access.", "danger")
-        #     return redirect(url_for("login"))
-
+    @app.route("/signup", methods=["GET", "POST"])
+    def signup():
         if request.method == "POST":
             fullname = request.form.get("fullname")
             emp_id = request.form.get("employee_id")
@@ -352,30 +353,40 @@ def init_routes(app):
             confirm_password = request.form.get("confirm_password")
             role = request.form.get("role")
 
+            # Validation
+            if not fullname or not emp_id or not email or not password or not confirm_password or not role:
+                flash("All fields are required.", "warning")
+                return redirect(url_for("signup"))
+
             if password != confirm_password:
                 flash("Passwords do not match.", "danger")
-                return redirect(url_for("add_employee"))
+                return redirect(url_for("signup"))
 
+            # Check if user already exists
             existing = User.query.filter(
                 (User.emp_id == emp_id) | (User.email == email)
             ).first()
             if existing:
                 flash("Employee ID or Email already exists.", "danger")
-                return redirect(url_for("add_employee"))
+                return redirect(url_for("signup"))
 
+            # Hash password and create user
             hashed_pw = generate_password_hash(password)
-            new_user = User(emp_id=emp_id,
-                            name=fullname,
-                            email=email,
-                            password=hashed_pw,
-                            role=role)
+            new_user = User(
+                emp_id=emp_id,
+                name=fullname,
+                email=email,
+                password=hashed_pw,
+                role=role
+            )
             db.session.add(new_user)
             db.session.commit()
 
-            flash("Employee added successfully!", "success")
-            return redirect(url_for("hr_dashboard"))
+            flash("Signup successful! Please login.", "success")
+            return redirect(url_for("login"))
 
-        return render_template("add_employee.html")
+        # GET request → render signup form
+        return render_template("signup.html")
 
     # -----------------------------
     # Logout

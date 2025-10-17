@@ -18,6 +18,10 @@
     --shadow: 0 4px 6px rgba(45, 51, 107, 0.1);
 }
 
+table, th, td {
+  border: 1px solid black;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background: linear-gradient(135deg, #A9B5DF 0%, #7886C7 100%);
